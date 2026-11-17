@@ -47,9 +47,9 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="26" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="28" data-width="1080" data-height="1920">
       <!-- Voice (built by scripts/make_voice.mjs) -->
-      <audio id="voice" src="assets/voice.mp3" data-start="0" data-duration="26" data-volume="1"></audio>
+      <audio id="voice" src="assets/voice.mp3" data-start="0" data-duration="28" data-volume="1"></audio>
 
       <!-- HOOK: fully visible on frame 0 so it works as the thumbnail -->
       <div id="hook">
@@ -147,8 +147,10 @@
       }, 15.2);
       tl.to("#recap", { opacity: 0, duration: 0.3 }, 22.7);
       tl.fromTo("#cta", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5 }, 23);
-      // keep the timeline (and so the render) exactly 26 s long so the CTA is not cut off
-      tl.to("#cta", { opacity: 1, duration: 0.01 }, 25.99);
+      // closing frame: the hook comes back for the last 2 s (good cover frame + clean loop)
+      tl.to("#cta", { opacity: 0, duration: 0.3 }, 25.7);
+      tl.to("#hook", { opacity: 1, duration: 0.3 }, 25.8);
+      tl.to("#hook", { opacity: 1, duration: 0.01 }, 27.99);
       q("#recapNet").textContent = usd(0) + " a year";
 
       window.__timelines["main"] = tl;

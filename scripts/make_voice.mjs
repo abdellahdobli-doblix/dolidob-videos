@@ -1,10 +1,10 @@
-// Builds assets/voice.mp3 (26 s) from short narration lines placed at fixed times.
+// Builds assets/voice.mp3 (28 s) from short narration lines placed at fixed times.
 // Uses ElevenLabs text-to-speech when ELEVENLABS_API_KEY is set; otherwise writes silence,
 // so the render never breaks because of the voice.
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const TOTAL = 26;
+const TOTAL = 28;
 const v = JSON.parse(process.env.PAYLOAD || "{}");
 const key = process.env.ELEVENLABS_API_KEY || "";
 const voiceId = process.env.ELEVENLABS_VOICE_ID || "XrExE9yKIg1WjnnlVkGX";
