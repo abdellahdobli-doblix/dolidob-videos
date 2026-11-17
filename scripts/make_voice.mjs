@@ -2,7 +2,7 @@
 // Uses ElevenLabs text-to-speech when ELEVENLABS_API_KEY is set; otherwise writes silence,
 // so the render never breaks because of the voice.
 import { execFileSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, existsSync, copyFileSync } from "node:fs";
 
 const TOTAL = 28;
 const v = JSON.parse(process.env.PAYLOAD || "{}");
@@ -25,13 +25,29 @@ const lines = [
 mkdirSync("assets", { recursive: true });
 mkdirSync("tmp", { recursive: true });
 
+// Mix the narration with the soft background music (assets/music.mp3, generated in-house, no licence issues).
+function finish() {
+  if (!existsSync("assets/music.mp3")) {
+    copyFileSync("tmp/voice_only.mp3", "assets/voice.mp3");
+    return;
+  }
+  const mixArgs = [
+    "-y", "-i", "tmp/voice_only.mp3", "-i", "assets/music.mp3",
+    "-filter_complex",
+    `[1:a]aresample=44100,aformat=channel_layouts=stereo,volume=${process.env.MUSIC_GAIN || "2.6"}[m];[0:a][m]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95,atrim=0:${TOTAL}[out]`,
+    "-map", "[out]", "-q:a", "2", "assets/voice.mp3",
+  ];
+  execFileSync("ffmpeg", mixArgs, { stdio: "inherit" });
+}
+
 function silence() {
-  execFileSync("ffmpeg", ["-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-t", String(TOTAL), "-q:a", "9", "assets/voice.mp3"], { stdio: "inherit" });
+  execFileSync("ffmpeg", ["-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-t", String(TOTAL), "-q:a", "9", "tmp/voice_only.mp3"], { stdio: "inherit" });
 }
 
 if (!key) {
   console.log("No ELEVENLABS_API_KEY: writing a silent voice track.");
   silence();
+  finish();
   process.exit(0);
 }
 
@@ -47,6 +63,7 @@ for (let i = 0; i < lines.length; i++) {
     console.error(`ElevenLabs error ${res.status} on line ${i}: ${(await res.text()).slice(0, 300)}`);
     console.error("Falling back to a silent voice track.");
     silence();
+    finish();
     process.exit(0);
   }
   const file = `tmp/seg${i}.mp3`;
@@ -58,6 +75,7 @@ const args = ["-y"];
 parts.forEach((p) => args.push("-i", p.file));
 const filters = parts.map((p, i) => `[${i}:a]aresample=44100,aformat=channel_layouts=stereo,adelay=${p.at * 1000}|${p.at * 1000}[a${i}]`);
 const mix = parts.map((_, i) => `[a${i}]`).join("") + `amix=inputs=${parts.length}:normalize=0,apad=whole_dur=${TOTAL},atrim=0:${TOTAL}[out]`;
-args.push("-filter_complex", filters.concat(mix).join(";"), "-map", "[out]", "-q:a", "2", "assets/voice.mp3");
+args.push("-filter_complex", filters.concat(mix).join(";"), "-map", "[out]", "-q:a", "2", "tmp/voice_only.mp3");
 execFileSync("ffmpeg", args, { stdio: "inherit" });
-console.log("Voice track ready.");
+finish();
+console.log("Audio track ready.");
