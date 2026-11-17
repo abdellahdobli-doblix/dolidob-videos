@@ -1,0 +1,155 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"stateName","type":"string","label":"State name","default":"Texas"},
+    {"id":"income","type":"number","label":"Gross salary","default":85000},
+    {"id":"fed","type":"number","label":"Federal income tax","default":9870},
+    {"id":"fica","type":"number","label":"Social Security + Medicare","default":6503},
+    {"id":"stateTax","type":"number","label":"State income tax","default":0},
+    {"id":"noStateTax","type":"boolean","label":"State has no wage tax","default":true},
+    {"id":"net","type":"number","label":"Take-home per year","default":68628},
+    {"id":"status","type":"string","label":"Filing status","default":"single"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>dolidob take-home pay short</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #0b1230; font-family: "Montserrat", sans-serif; color: #fff;
+      }
+      #root { position: relative; width: 1080px; height: 1920px; background: #0b1230; overflow: hidden; }
+      .abs { position: absolute; left: 0; width: 1080px; text-align: center; }
+      .t { position: absolute; left: 90px; width: 900px; text-align: center; line-height: 1.12; }
+      .label { color: #bcd2ff; font-weight: 600; }
+      .white { color: #fff; font-weight: 800; }
+      .yellow { color: #ffd54a; font-weight: 800; }
+      .red { color: #ff6b6b; font-weight: 800; }
+      .card { position: absolute; left: 77px; width: 926px; height: 270px; background: #16214f; border-radius: 28px; }
+      .card .t { left: 0; width: 926px; }
+      #topbar { position: absolute; left: 0; top: 0; width: 1080px; height: 58px; background: #ffd54a; }
+      #netbox { position: absolute; left: 43px; width: 994px; top: 810px; height: 290px; background: #ffd54a; border-radius: 28px; }
+      #track { position: absolute; left: 86px; width: 908px; top: 1490px; height: 78px; background: #16214f; border-radius: 39px; overflow: hidden; }
+      #taxfill { position: absolute; left: 0; top: 0; height: 78px; width: 0; background: #ff6b6b; }
+      #keepfill { position: absolute; top: 0; height: 78px; width: 0; background: #ffd54a; }
+      #footer { position: absolute; left: 50px; width: 980px; top: 1770px; text-align: center; color: #a9b9e6; font-weight: 600; font-size: 37px; line-height: 1.2; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="26" data-width="1080" data-height="1920">
+      <!-- Voice (built by scripts/make_voice.mjs) -->
+      <audio id="voice" src="assets/voice.mp3" data-start="0" data-duration="26" data-volume="1"></audio>
+
+      <!-- HOOK: fully visible on frame 0 so it works as the thumbnail -->
+      <div id="hook">
+        <div id="topbar"></div>
+        <div class="t label" id="hookLabel" style="top: 270px; font-size: 54px; font-weight: 700;"></div>
+        <div class="t white" style="top: 440px; font-size: 92px;">You really keep only</div>
+        <div id="netbox"></div>
+        <div class="t" id="hookNet" style="top: 855px; font-size: 151px; font-weight: 800; color: #0b1230;"></div>
+        <div class="t red" id="hookTax" style="top: 1215px; font-size: 81px;"></div>
+        <div class="t white" style="top: 1470px; font-size: 59px; font-weight: 600;">Here is where it goes</div>
+      </div>
+
+      <!-- BREAKDOWN CARDS -->
+      <div class="card" id="c1" style="top: 330px; opacity: 0;">
+        <div class="t label" style="top: 50px; font-size: 52px;">Federal income tax</div>
+        <div class="t white" id="c1v" style="top: 135px; font-size: 97px;"></div>
+      </div>
+      <div class="card" id="c2" style="top: 650px; opacity: 0;">
+        <div class="t label" style="top: 50px; font-size: 52px;">Social Security + Medicare</div>
+        <div class="t white" id="c2v" style="top: 135px; font-size: 97px;"></div>
+      </div>
+      <div class="card" id="c3" style="top: 970px; opacity: 0;">
+        <div class="t label" id="c3l" style="top: 50px; font-size: 52px;"></div>
+        <div class="t white" id="c3v" style="top: 135px; font-size: 97px;"></div>
+      </div>
+
+      <!-- SHARE BAR -->
+      <div id="barGroup" style="opacity: 0;">
+        <div class="t white" id="barLabel" style="top: 1395px; font-size: 52px; font-weight: 700;"></div>
+        <div id="track"><div id="taxfill"></div><div id="keepfill"></div></div>
+      </div>
+
+      <!-- RECAP -->
+      <div id="recap" style="opacity: 0;">
+        <div class="t label" style="top: 690px; font-size: 65px;">Your take-home pay</div>
+        <div class="t yellow" id="recapNet" style="top: 830px; font-size: 113px;"></div>
+        <div class="t white" id="recapMonth" style="top: 1020px; font-size: 76px; font-weight: 700;"></div>
+      </div>
+
+      <!-- CTA -->
+      <div id="cta" style="opacity: 0;">
+        <div class="t white" style="top: 780px; font-size: 70px;">Try it with your numbers at dolidob.com</div>
+        <div class="t yellow" style="top: 1010px; font-size: 54px; font-weight: 700;">Free calculator + Telegram bot</div>
+      </div>
+
+      <div id="footer"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const v = window.__hyperframes.getVariables();
+      const usd = (n) => "$" + Math.round(n).toLocaleString("en-US");
+      const income = Number(v.income), net = Number(v.net);
+      const fed = Number(v.fed), fica = Number(v.fica), stTax = Number(v.stateTax);
+      const taxes = fed + fica + stTax;
+      const share = Math.max(0, Math.min(1, taxes / income));
+      const pctTax = Math.round(share * 100);
+      const q = (s) => document.querySelector(s);
+
+      q("#hookLabel").textContent = String(v.stateName).toUpperCase() + "  |  " + usd(income) + " SALARY";
+      q("#hookNet").textContent = usd(net);
+      q("#hookTax").textContent = "Taxes take " + usd(taxes);
+      q("#c1v").textContent = "-" + usd(fed);
+      q("#c2v").textContent = "-" + usd(fica);
+      q("#c3l").textContent = v.noStateTax ? "No state income tax" : v.stateName + " income tax";
+      q("#c3v").textContent = v.noStateTax ? "$0" : "-" + usd(stTax);
+      q("#barLabel").textContent = "Taxes " + pctTax + "%   |   You keep " + (100 - pctTax) + "%";
+      q("#recapMonth").textContent = "about " + usd(net / 12) + " a month";
+      q("#footer").textContent = "Estimate only, not tax advice. " + v.status + " filer, standard deduction, 2026 rules.";
+
+      const TRACK = 908;
+      q("#keepfill").style.left = Math.round(TRACK * share) + "px";
+
+      const tl = gsap.timeline({ paused: true });
+      const rise = (sel, at) => {
+        tl.fromTo(sel, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, at);
+        tl.to(sel, { opacity: 0, duration: 0.3 }, 15);
+      };
+      // Hook is visible from frame 0, leaves at 5s
+      tl.to("#hook", { opacity: 0, duration: 0.3 }, 4.8);
+      rise("#c1", 5);
+      rise("#c2", 8);
+      rise("#c3", 11);
+      // Share bar from 5s fills the empty lower area
+      tl.fromTo("#barGroup", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 5);
+      tl.to("#taxfill", { width: Math.round(TRACK * share), duration: 1.2, ease: "power2.out" }, 5.6);
+      tl.to("#keepfill", { width: Math.round(TRACK * (1 - share)), duration: 1.2, ease: "power2.out" }, 6.2);
+      tl.to("#barGroup", { opacity: 0, duration: 0.3 }, 15);
+      // Recap with count-up
+      const counter = { n: 0 };
+      tl.fromTo("#recap", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 15);
+      tl.to(counter, {
+        n: net, duration: 1.6, ease: "power2.out",
+        onUpdate: () => { q("#recapNet").textContent = usd(counter.n) + " a year"; },
+      }, 15.2);
+      tl.to("#recap", { opacity: 0, duration: 0.3 }, 22.7);
+      tl.fromTo("#cta", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5 }, 23);
+      q("#recapNet").textContent = usd(0) + " a year";
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

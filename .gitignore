@@ -1,0 +1,5 @@
+node_modules/
+out/
+tmp/
+assets/voice.mp3
+renders/

@@ -1,0 +1,64 @@
+name: Render short
+
+on:
+  workflow_dispatch:
+    inputs:
+      payload:
+        description: "JSON with stateName, income, fed, fica, stateTax, noStateTax, net, status"
+        required: true
+        type: string
+      run_label:
+        description: "Label so the caller can find this run (e.g. a state slug + timestamp)"
+        required: true
+        type: string
+
+run-name: "render ${{ inputs.run_label }}"
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-liberation
+
+      - name: Build narration
+        env:
+          PAYLOAD: ${{ inputs.payload }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ vars.ELEVENLABS_VOICE_ID }}
+        run: node scripts/make_voice.mjs
+
+      - name: Prepare browser
+        run: npx --yes hyperframes browser ensure
+
+      - name: Lint and check
+        env:
+          PAYLOAD: ${{ inputs.payload }}
+        run: |
+          npx --yes hyperframes lint
+          npx --yes hyperframes check --variables "$PAYLOAD" || echo "check reported warnings"
+
+      - name: Render 1080x1920
+        env:
+          PAYLOAD: ${{ inputs.payload }}
+        run: |
+          mkdir -p out
+          npx --yes hyperframes render --variables "$PAYLOAD" --quality high --fps 30 --output out/video.mp4
+
+      - name: Probe result
+        run: ffprobe -v error -show_entries stream=codec_type,width,height,duration -of default=nw=1 out/video.mp4
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: video
+          path: out/video.mp4
+          retention-days: 3
