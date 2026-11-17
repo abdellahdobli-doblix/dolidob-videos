@@ -147,6 +147,8 @@
       }, 15.2);
       tl.to("#recap", { opacity: 0, duration: 0.3 }, 22.7);
       tl.fromTo("#cta", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5 }, 23);
+      // keep the timeline (and so the render) exactly 26 s long so the CTA is not cut off
+      tl.to("#cta", { opacity: 1, duration: 0.01 }, 25.99);
       q("#recapNet").textContent = usd(0) + " a year";
 
       window.__timelines["main"] = tl;
