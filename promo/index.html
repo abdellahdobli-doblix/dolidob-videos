@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>dolidob.com promo short (60 s)</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=IBM+Plex+Sans:wght@500;600;700&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      :root {
+        --night: #0b1430; --navy: #172554; --card: #16224f; --gold: #fcd34d; --mint: #6ee7b7;
+        --sky: #93c5fd; --pink: #f9a8d4; --violet: #c4b5fd; --red: #ff7a7a; --ink: #0b1430;
+        --display: "Bricolage Grotesque", "IBM Plex Sans", sans-serif; --body: "IBM Plex Sans", sans-serif;
+      }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--night); color: #fff; font-family: var(--body); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: radial-gradient(900px 700px at 85% 8%, #1d3a8a55, transparent 70%),
+                    radial-gradient(800px 700px at 10% 95%, #fcd34d22, transparent 70%), var(--night); }
+      /* Platform safe zone: nothing important above y=270, below y=1470, or right of x=940 */
+      .safe { position: absolute; left: 80px; top: 270px; width: 860px; height: 1200px; }
+      .sc { position: absolute; left: 0; top: 0; width: 860px; height: 1200px; opacity: 0; }
+      .abs { position: absolute; }
+      .c { text-align: center; width: 860px; left: 0; }
+      .disp { font-family: var(--display); font-weight: 800; line-height: 1.05; letter-spacing: -0.5px; }
+      .kicker { font-weight: 700; font-size: 34px; letter-spacing: 4px; text-transform: uppercase; }
+      .gold { color: var(--gold); } .mint { color: var(--mint); } .sky { color: var(--sky); } .pink { color: var(--pink); } .red { color: var(--red); }
+      .box { background: var(--card); border-radius: 30px; }
+      .foot { position: absolute; left: 0; top: 1150px; width: 860px; text-align: center; font-size: 26px; font-weight: 500; color: #8fa4d8; }
+
+      /* scene 1 + 8 hook */
+      .hookbox { background: var(--gold); border-radius: 36px; color: var(--ink); width: 860px; height: 250px; left: 0; display: flex; align-items: center; justify-content: center; }
+      .hookbox span { font-family: var(--display); font-weight: 800; font-size: 170px; letter-spacing: -2px; }
+      /* scene 2 cards */
+      .card { position: absolute; left: 0; width: 860px; height: 250px; padding: 34px 48px; }
+      .card .l { font-size: 38px; font-weight: 600; color: var(--sky); }
+      .card .v { font-family: var(--display); font-weight: 800; font-size: 104px; line-height: 1.05; margin-top: 4px; }
+      /* scene 3 */
+      .chip { display: inline-block; padding: 16px 30px; border-radius: 999px; background: #ffffff14; border: 2px solid #ffffff26; font-size: 38px; font-weight: 600; margin: 0 6px 18px; }
+      /* scene 4 map */
+      .tiles { position: absolute; left: 4px; top: 175px; width: 848px; height: 620px; }
+      .tile { position: absolute; width: 70px; height: 70px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 26px; color: var(--ink); opacity: 0; }
+      .tile.none { background: var(--mint); } .tile.state { background: var(--sky); } .tile.local { background: var(--gold); }
+      .tile.on { box-shadow: 0 0 0 6px #fff; z-index: 5; }
+      .legend { position: absolute; left: 0; top: 815px; width: 860px; text-align: center; font-size: 30px; font-weight: 600; color: #c9d6f5; }
+      .legend i { display: inline-block; width: 24px; height: 24px; border-radius: 7px; margin: 0 10px -3px 22px; }
+      .scard { position: absolute; left: 0; top: 880px; width: 860px; height: 250px; padding: 24px 44px; opacity: 0; }
+      .scard .n { font-family: var(--display); font-weight: 800; font-size: 74px; }
+      .scard .k { display: inline-block; font-size: 30px; font-weight: 700; padding: 6px 20px; border-radius: 999px; color: var(--ink); margin-left: 18px; vertical-align: 12px; }
+      .scard .f { font-size: 34px; font-weight: 500; color: #d7e1fb; margin-top: 10px; line-height: 1.3; }
+      /* scene 5 bars */
+      .row { position: absolute; left: 0; width: 860px; height: 120px; }
+      .row .lab { font-size: 36px; font-weight: 600; color: #dbe5ff; }
+      .row .val { position: absolute; right: 0; top: 0; font-family: var(--display); font-weight: 800; font-size: 46px; }
+      .row .track { position: absolute; left: 0; top: 62px; width: 860px; height: 40px; border-radius: 20px; background: #ffffff14; }
+      .row .fill { position: absolute; left: 0; top: 0; height: 40px; border-radius: 20px; width: 0; }
+      /* scene 6 tools */
+      .tool { position: absolute; width: 410px; height: 330px; padding: 34px; opacity: 0; }
+      .tool .ic { width: 96px; height: 96px; border-radius: 26px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
+      .tool .tn { font-family: var(--display); font-weight: 800; font-size: 46px; line-height: 1.05; }
+      .tool .ts { font-size: 28px; color: #b9c8ee; margin-top: 8px; font-weight: 500; }
+      /* scene 7 chat */
+      .phone { position: absolute; left: 40px; top: 90px; width: 780px; height: 860px; border-radius: 48px; background: #0f1c3f; border: 3px solid #2a3c75; overflow: hidden; }
+      .chead { height: 110px; background: #17285a; display: flex; align-items: center; padding: 0 34px; gap: 22px; }
+      .chead .av { width: 66px; height: 66px; border-radius: 50%; background: var(--gold); color: var(--navy); font-weight: 800; font-size: 40px; display: flex; align-items: center; justify-content: center; }
+      .chead .nm { font-size: 38px; font-weight: 700; } .chead .sb { font-size: 26px; color: #9fb3e6; }
+      .bub { position: absolute; max-width: 600px; padding: 22px 28px; border-radius: 28px; font-size: 32px; line-height: 1.32; opacity: 0; }
+      .bub.me { right: 30px; background: #2b6df0; border-bottom-right-radius: 8px; }
+      .bub.bot { left: 30px; background: #1d2f66; border-bottom-left-radius: 8px; }
+      .bub b { font-weight: 700; }
+      /* scene 8 CTA */
+      .cta { background: var(--gold); color: var(--ink); border-radius: 36px; width: 860px; height: 170px; display: flex; align-items: center; justify-content: center; }
+      .cta span { font-family: var(--display); font-weight: 800; font-size: 100px; letter-spacing: -1px; }
+      svg.logo { width: 760px; height: auto; display: block; margin: 0 auto; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1080" data-height="1920">
+      <audio id="voice" src="assets/voice.mp3" data-start="0" data-duration="60" data-volume="1"></audio>
+      <div class="safe">
+
+        <!-- 1. HOOK 0-4 s (visible from the first frame) -->
+        <div class="sc" id="s1" style="opacity:1">
+          <div class="abs c kicker sky" style="top:40px">$85,000 salary in Texas</div>
+          <div class="abs c disp" style="top:130px; font-size:112px">Where does your paycheck really go?</div>
+          <div class="abs hookbox" style="top:560px"><span id="hookNum">$85,000</span></div>
+          <div class="abs c disp red" id="hookTax" style="top:860px; font-size:80px">Taxes take $16,373</div>
+        </div>
+
+        <!-- 2. PROBLEM 4-11 s -->
+        <div class="sc" id="s2">
+          <div class="abs c kicker pink" style="top:20px">Slice by slice</div>
+          <div class="abs c disp" style="top:80px; font-size:84px">They all take a slice</div>
+          <div class="card box" id="p1" style="top:260px"><div class="l">Federal income tax</div><div class="v sky">-$9,870</div></div>
+          <div class="card box" id="p2" style="top:550px"><div class="l" style="color:var(--violet)">Social Security + Medicare</div><div class="v" style="color:var(--violet)">-$6,503</div></div>
+          <div class="card box" id="p3" style="top:840px"><div class="l" style="color:var(--pink)">State income tax</div><div class="v pink" style="font-size:66px; line-height:1.2; margin-top:16px">$0 in Texas, more in most states</div></div>
+        </div>
+
+        <!-- 3. INTRO 11-17 s -->
+        <div class="sc" id="s3">
+          <div class="abs" style="left:0; top:150px; width:860px" id="logoWrap"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="-15 1 396 114" focusable="false"><circle cx="28" cy="72" r="39.5" fill="#172554"/><rect x="31.5" y="4.5" width="36.0" height="107.0" rx="11.5" fill="#172554"/><circle cx="94" cy="72" r="39.5" fill="#172554"/><rect x="120.5" y="4.5" width="36.0" height="107.0" rx="11.5" fill="#172554"/><rect x="143.5" y="32.5" width="36.0" height="79.0" rx="11.5" fill="#172554"/><circle cx="161.5" cy="25" r="19.0" fill="#172554"/><circle cx="206" cy="72" r="39.5" fill="#172554"/><rect x="209.5" y="4.5" width="36.0" height="107.0" rx="11.5" fill="#172554"/><circle cx="272" cy="72" r="39.5" fill="#172554"/><rect x="298.5" y="4.5" width="36.0" height="107.0" rx="11.5" fill="#172554"/><circle cx="338" cy="72" r="39.5" fill="#172554"/><circle cx="28" cy="72" r="37" fill="#f4c430"/><rect x="34" y="7" width="31" height="102" rx="9" fill="#f4c430"/><circle cx="94" cy="72" r="37" fill="#f4c430"/><rect x="123" y="7" width="31" height="102" rx="9" fill="#f4c430"/><rect x="146" y="35" width="31" height="74" rx="9" fill="#f4c430"/><circle cx="161.5" cy="25" r="16.5" fill="#f4c430"/><circle cx="206" cy="72" r="37" fill="#f4c430"/><rect x="212" y="7" width="31" height="102" rx="9" fill="#f4c430"/><circle cx="272" cy="72" r="37" fill="#f4c430"/><rect x="301" y="7" width="31" height="102" rx="9" fill="#f4c430"/><circle cx="338" cy="72" r="37" fill="#f4c430"/><circle cx="28" cy="72" r="21.5" fill="none" stroke="#172554" stroke-width="13"/><rect x="43" y="16" width="13" height="84" rx="0" fill="#172554"/><circle cx="94" cy="72" r="28" fill="#172554"/><circle cx="94" cy="72" r="23" fill="none" stroke="#ffffff" stroke-width="2.6"/><path d="M101.82,64.18 C99.06,60.50 85.72,60.50 85.72,67.40 C85.72,72.92 102.28,71.08 102.28,76.60 C102.28,83.50 88.94,83.50 86.18,79.82" fill="none" stroke="#ffffff" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/><line x1="94" y1="57.28" x2="94" y2="86.72" stroke="#ffffff" stroke-width="4.4" stroke-linecap="round"/><rect x="132" y="16" width="13" height="84" rx="0" fill="#172554"/><rect x="155" y="44" width="13" height="56" rx="0" fill="#172554"/><circle cx="161.5" cy="25" r="7.5" fill="#172554"/><circle cx="206" cy="72" r="21.5" fill="none" stroke="#3fa9dc" stroke-width="13"/><rect x="221" y="16" width="13" height="84" rx="0" fill="#3fa9dc"/><circle cx="272" cy="72" r="21.5" fill="none" stroke="#3fa9dc" stroke-width="13"/><rect x="310" y="16" width="13" height="84" rx="0" fill="#3fa9dc"/><circle cx="338" cy="72" r="21.5" fill="none" stroke="#3fa9dc" stroke-width="13"/></svg></div>
+          <div class="abs c disp" style="top:520px; font-size:92px">Free U.S. paycheck &amp; tax calculators</div>
+          <div class="abs c" style="top:860px; line-height:1.2" id="chips">
+            <span class="chip" id="ch1">All 50 states + D.C.</span><br /><span class="chip" id="ch2">2026 tax rules</span><span class="chip" id="ch3">100% free</span>
+          </div>
+        </div>
+
+        <!-- 4. MAP 17-28 s -->
+        <div class="sc" id="s4">
+          <div class="abs c kicker pink" style="top:0">The map</div>
+          <div class="abs c disp" style="top:50px; font-size:92px">Tap your state</div>
+          <div class="tiles"><div class="tile none" id="tAK" style="left:0px;top:0px">AK</div><div class="tile state" id="tME" style="left:780px;top:0px">ME</div><div class="tile state" id="tVT" style="left:702px;top:78px">VT</div><div class="tile none" id="tNH" style="left:780px;top:78px">NH</div><div class="tile none" id="tWA" style="left:0px;top:156px">WA</div><div class="tile state" id="tID" style="left:78px;top:156px">ID</div><div class="tile state" id="tMT" style="left:156px;top:156px">MT</div><div class="tile state" id="tND" style="left:234px;top:156px">ND</div><div class="tile state" id="tMN" style="left:312px;top:156px">MN</div><div class="tile state" id="tIL" style="left:390px;top:156px">IL</div><div class="tile state" id="tWI" style="left:468px;top:156px">WI</div><div class="tile local" id="tMI" style="left:546px;top:156px">MI</div><div class="tile local" id="tNY" style="left:624px;top:156px">NY</div><div class="tile state" id="tRI" style="left:702px;top:156px">RI</div><div class="tile state" id="tMA" style="left:780px;top:156px">MA</div><div class="tile state" id="tOR" style="left:0px;top:234px">OR</div><div class="tile none" id="tNV" style="left:78px;top:234px">NV</div><div class="tile none" id="tWY" style="left:156px;top:234px">WY</div><div class="tile none" id="tSD" style="left:234px;top:234px">SD</div><div class="tile state" id="tIA" style="left:312px;top:234px">IA</div><div class="tile local" id="tIN" style="left:390px;top:234px">IN</div><div class="tile local" id="tOH" style="left:468px;top:234px">OH</div><div class="tile local" id="tPA" style="left:546px;top:234px">PA</div><div class="tile state" id="tNJ" style="left:624px;top:234px">NJ</div><div class="tile state" id="tCT" style="left:702px;top:234px">CT</div><div class="tile state" id="tCA" style="left:0px;top:312px">CA</div><div class="tile state" id="tUT" style="left:78px;top:312px">UT</div><div class="tile state" id="tCO" style="left:156px;top:312px">CO</div><div class="tile state" id="tNE" style="left:234px;top:312px">NE</div><div class="tile state" id="tMO" style="left:312px;top:312px">MO</div><div class="tile state" id="tKY" style="left:390px;top:312px">KY</div><div class="tile state" id="tWV" style="left:468px;top:312px">WV</div><div class="tile state" id="tVA" style="left:546px;top:312px">VA</div><div class="tile local" id="tMD" style="left:624px;top:312px">MD</div><div class="tile state" id="tDE" style="left:702px;top:312px">DE</div><div class="tile state" id="tAZ" style="left:78px;top:390px">AZ</div><div class="tile state" id="tNM" style="left:156px;top:390px">NM</div><div class="tile state" id="tKS" style="left:234px;top:390px">KS</div><div class="tile state" id="tAR" style="left:312px;top:390px">AR</div><div class="tile none" id="tTN" style="left:390px;top:390px">TN</div><div class="tile state" id="tNC" style="left:468px;top:390px">NC</div><div class="tile state" id="tSC" style="left:546px;top:390px">SC</div><div class="tile state" id="tDC" style="left:624px;top:390px">DC</div><div class="tile state" id="tOK" style="left:234px;top:468px">OK</div><div class="tile state" id="tLA" style="left:312px;top:468px">LA</div><div class="tile state" id="tMS" style="left:390px;top:468px">MS</div><div class="tile state" id="tAL" style="left:468px;top:468px">AL</div><div class="tile state" id="tGA" style="left:546px;top:468px">GA</div><div class="tile state" id="tHI" style="left:0px;top:546px">HI</div><div class="tile none" id="tTX" style="left:234px;top:546px">TX</div><div class="tile none" id="tFL" style="left:624px;top:546px">FL</div></div>
+          <div class="legend"><i style="background:var(--mint)"></i>No state tax<i style="background:var(--sky)"></i>State tax<i style="background:var(--gold)"></i>State + local</div>
+          <div class="scard box" id="scard">
+            <div><span class="n" id="scn">Texas</span><span class="k" id="sck">No income tax</span></div>
+            <div class="f" id="scf">No state income tax on wages: only federal, Social Security and Medicare come out.</div>
+          </div>
+        </div>
+
+        <!-- 5. BREAKDOWN 28-37 s -->
+        <div class="sc" id="s5">
+          <div class="abs c kicker gold" style="top:0">Texas · $85,000 · single</div>
+          <div class="abs c disp" style="top:50px; font-size:80px">Where it all goes</div>
+          <div class="row" style="top:270px"><div class="lab">Take-home pay</div><div class="val gold">$68,627</div><div class="track"><div class="fill" id="b1" style="background:var(--gold)"></div></div></div>
+          <div class="row" style="top:420px"><div class="lab">Federal income tax</div><div class="val sky">$9,870</div><div class="track"><div class="fill" id="b2" style="background:var(--sky)"></div></div></div>
+          <div class="row" style="top:570px"><div class="lab">Social Security</div><div class="val" style="color:var(--violet)">$5,270</div><div class="track"><div class="fill" id="b3" style="background:var(--violet)"></div></div></div>
+          <div class="row" style="top:720px"><div class="lab">Medicare</div><div class="val" style="color:var(--violet)">$1,233</div><div class="track"><div class="fill" id="b4" style="background:var(--violet)"></div></div></div>
+          <div class="abs box" id="ann" style="left:0; top:910px; width:410px; height:190px; text-align:center; padding-top:30px"><div style="font-size:30px;color:#b9c8ee;font-weight:600">Every year</div><div class="disp gold" style="font-size:66px; margin-top:8px">$68,627</div></div>
+          <div class="abs box" id="mon" style="left:450px; top:910px; width:410px; height:190px; text-align:center; padding-top:30px"><div style="font-size:30px;color:#b9c8ee;font-weight:600">Every month</div><div class="disp gold" style="font-size:66px; margin-top:8px">$5,719</div></div>
+        </div>
+
+        <!-- 6. TOOLS 37-45 s -->
+        <div class="sc" id="s6">
+          <div class="abs c disp gold" style="top:0; font-size:150px" id="bigNum">20+</div>
+          <div class="abs c disp" style="top:170px; font-size:74px">free calculators</div>
+          <div class="tool box" id="k1" style="left:0; top:330px"><div class="ic" style="background:var(--gold)"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0b1430" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9v0M18 15v0"/></svg></div><div class="tn">Take-home pay</div><div class="ts">All 50 states + D.C.</div></div>
+          <div class="tool box" id="k2" style="left:450px; top:330px"><div class="ic" style="background:var(--sky)"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0b1430" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></div><div class="tn">Mortgage payment</div><div class="ts">And home affordability</div></div>
+          <div class="tool box" id="k3" style="left:0; top:700px"><div class="ic" style="background:var(--pink)"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0b1430" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19"/><path d="M6 15h4"/></svg></div><div class="tn">Debt payoff</div><div class="ts">Snowball vs avalanche</div></div>
+          <div class="tool box" id="k4" style="left:450px; top:700px"><div class="ic" style="background:var(--mint)"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0b1430" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M5 16l5-5 3 3 6-7"/><path d="M15 7h4v4"/></svg></div><div class="tn">401(k) growth</div><div class="ts">Roth vs traditional</div></div>
+          <div class="abs c" id="more" style="top:1075px; font-size:32px; font-weight:600; color:#c9d6f5; opacity:0">Self-employment tax · Overtime · Auto loan · more</div>
+        </div>
+
+        <!-- 7. BOT 45-50 s -->
+        <div class="sc" id="s7">
+          <div class="phone">
+            <div class="chead"><div class="av">$</div><div><div class="nm">Dolidob Tax Bot</div><div class="sb">bot · free on Telegram</div></div></div>
+            <div class="bub me" id="m1" style="top:150px"><i>I live in Texas and make $85k, single</i></div>
+            <div class="bub bot" id="m2" style="top:300px; max-width:640px">
+              <b>Federal income tax: $9,870</b><br />
+              Social Security + Medicare: $6,503<br />
+              State income tax: $0<br /><br />
+              <b class="gold">Take-home: $68,627/yr (~$5,719/mo)</b>
+            </div>
+            <div class="bub bot" id="m3" style="top:640px; font-size:28px; color:#b9c8ee">Estimates only, not tax advice.</div>
+          </div>
+        </div>
+
+        <!-- 8. CTA 50-56 s -->
+        <div class="sc" id="s8">
+          <div class="abs c kicker sky" style="top:150px">Try it with your own numbers</div>
+          <div class="abs cta" style="top:260px"><span>dolidob.com</span></div>
+          <div class="abs c disp" style="top:520px; font-size:70px">Free, no matter your state</div>
+          <div class="abs c" style="top:700px; font-size:48px; font-weight:700"><span class="gold">Telegram bot:</span> @dolidob_bot</div>
+          <div class="abs c" style="top:820px; font-size:34px; color:#b9c8ee; font-weight:500">Estimates only. Not tax advice.</div>
+        </div>
+
+        <!-- 9. CLOSING HOOK 56-60 s (same as scene 1, final numbers) -->
+        <div class="sc" id="s9">
+          <div class="abs c kicker sky" style="top:40px">$85,000 salary in Texas</div>
+          <div class="abs c disp" style="top:130px; font-size:112px">You really keep only</div>
+          <div class="abs hookbox" style="top:560px"><span>$68,627</span></div>
+          <div class="abs c disp red" style="top:860px; font-size:80px">Taxes take $16,373</div>
+        </div>
+
+        <div class="foot" id="foot">Estimates only, not tax advice. 2026 rules.</div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const q = (s) => document.querySelector(s);
+      const tl = gsap.timeline({ paused: true });
+
+      const show = (id, at, until) => {
+        tl.set(id, { opacity: 1 }, at);
+        tl.fromTo(id, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, at);
+        tl.to(id, { opacity: 0, duration: 0.3 }, until - 0.3);
+      };
+
+      // 1. hook: visible at frame 0, no entrance animation; the number counts down
+      const hk = { n: 85000 };
+      tl.to(hk, { n: 68627, duration: 2.2, ease: "power2.inOut", onUpdate: () => { q("#hookNum").textContent = "$" + Math.round(hk.n).toLocaleString("en-US"); } }, 1.0);
+      tl.to("#s1", { opacity: 0, duration: 0.3 }, 3.7);
+
+      // 2. slices
+      tl.set("#s2", { opacity: 1 }, 4);
+      tl.fromTo("#s2", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 4);
+      ["#p1", "#p2", "#p3"].forEach((id, i) => tl.fromTo(id, { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 4.5 + i * 1.7));
+      tl.to("#s2", { opacity: 0, duration: 0.3 }, 10.7);
+
+      // 3. intro
+      show("#s3", 11, 17);
+      ["#ch1", "#ch2", "#ch3"].forEach((id, i) => tl.fromTo(id, { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" }, 13.2 + i * 0.5));
+
+      // 4. map
+      show("#s4", 17, 28);
+      tl.to(".tile", { opacity: 1, duration: 0.35, stagger: { each: 0.03, from: "random" } }, 17.6);
+      const setCard = (name, kind, color, fact) => {
+        q("#scn").textContent = name; q("#sck").textContent = kind; q("#sck").style.background = color; q("#scf").textContent = fact;
+      };
+      tl.call(() => { setCard("Texas", "No income tax", "var(--mint)", "No state income tax on wages: only federal, Social Security and Medicare come out."); q("#tTX").classList.add("on"); }, null, 20.0);
+      tl.to("#scard", { opacity: 1, duration: 0.3 }, 20.0);
+      tl.fromTo("#tTX", { scale: 1 }, { scale: 1.25, duration: 0.3, yoyo: true, repeat: 1 }, 20.0);
+      tl.call(() => { q("#tTX").classList.remove("on"); q("#tNY").classList.add("on"); setCard("New York", "State + local", "var(--gold)", "State income tax plus New York City tax. Every state has its own rules."); }, null, 24.0);
+      tl.fromTo("#tNY", { scale: 1 }, { scale: 1.25, duration: 0.3, yoyo: true, repeat: 1 }, 24.0);
+
+      // 5. breakdown
+      show("#s5", 28, 37);
+      const W = 860;
+      tl.to("#b1", { width: Math.round(W * 0.807), duration: 1.0, ease: "power2.out" }, 29.0);
+      tl.to("#b2", { width: Math.round(W * 0.116), duration: 0.8, ease: "power2.out" }, 30.2);
+      tl.to("#b3", { width: Math.round(W * 0.062), duration: 0.8, ease: "power2.out" }, 31.4);
+      tl.to("#b4", { width: Math.round(W * 0.0145), duration: 0.8, ease: "power2.out" }, 32.4);
+      tl.fromTo("#ann", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4 }, 33.6);
+      tl.fromTo("#mon", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4 }, 34.6);
+
+      // 6. tools
+      show("#s6", 37, 45);
+      ["#k1", "#k2", "#k3", "#k4"].forEach((id, i) => tl.fromTo(id, { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 38.0 + i * 0.9));
+      tl.to("#more", { opacity: 1, duration: 0.4 }, 42.4);
+
+      // 7. bot chat
+      show("#s7", 45, 50);
+      tl.fromTo("#m1", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, 45.6);
+      tl.fromTo("#m2", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 46.8);
+      tl.fromTo("#m3", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, 48.6);
+
+      // 8. CTA
+      show("#s8", 50, 56);
+
+      // 9. closing hook (loop-friendly cover frame)
+      tl.set("#s9", { opacity: 0 }, 0);
+      tl.to("#s9", { opacity: 1, duration: 0.4 }, 55.8);
+      // keep the timeline exactly 60 s long
+      tl.to("#s9", { opacity: 1, duration: 0.01 }, 59.99);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

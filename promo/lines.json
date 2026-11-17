@@ -1,0 +1,37 @@
+{
+ "total": 60,
+ "lines": [
+  {
+   "at": 0,
+   "text": "You earned eighty-five thousand dollars. So why does it feel like you keep so little?"
+  },
+  {
+   "at": 4.5,
+   "text": "Federal tax, Social Security, Medicare, state tax. They all take a slice before the money reaches you."
+  },
+  {
+   "at": 11.2,
+   "text": "That's why I built Dolidob: free calculators that show exactly where every dollar goes."
+  },
+  {
+   "at": 17.5,
+   "text": "Pick your state on the map and see your take-home pay in seconds. It uses 2026 rules for all fifty states and D.C., even city taxes like New York City."
+  },
+  {
+   "at": 28.5,
+   "text": "See the full breakdown: federal tax, Social Security and Medicare, state tax, and what is left for you, every year and every month."
+  },
+  {
+   "at": 37.8,
+   "text": "And it's not just paychecks. There are more than twenty calculators for mortgages, debt payoff, 401(k) and more."
+  },
+  {
+   "at": 46.0,
+   "text": "Prefer chat? Our free Telegram bot does it in one message."
+  },
+  {
+   "at": 50.8,
+   "text": "Try it with your own numbers at dolidob dot com. Estimates only, not tax advice."
+  }
+ ]
+}

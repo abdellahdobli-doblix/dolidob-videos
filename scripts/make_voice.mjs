@@ -2,9 +2,10 @@
 // Uses ElevenLabs text-to-speech when ELEVENLABS_API_KEY is set; otherwise writes silence,
 // so the render never breaks because of the voice.
 import { execFileSync } from "node:child_process";
-import { mkdirSync, writeFileSync, existsSync, copyFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, existsSync, copyFileSync, readFileSync } from "node:fs";
 
-const TOTAL = 28;
+const custom = existsSync("lines.json") ? JSON.parse(readFileSync("lines.json", "utf8")) : null; // promo videos ship their own script
+const TOTAL = custom ? custom.total : 28;
 const v = JSON.parse(process.env.PAYLOAD || "{}");
 const key = process.env.ELEVENLABS_API_KEY || "";
 const voiceId = process.env.ELEVENLABS_VOICE_ID || "XrExE9yKIg1WjnnlVkGX";
@@ -12,7 +13,7 @@ const model = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
 
 const spoken = (n) => (n >= 10000 ? Math.round(n / 1000) + " thousand dollars" : Math.round(n / 10) * 10 + " dollars");
 const name = v.stateName || "this state";
-const lines = [
+const lines = custom ? custom.lines.map((l) => [l.at, l.text]) : [
   [0, `In ${name}, a ${spoken(v.income)} salary leaves you with only ${spoken(v.net)}.`],
   [5, `Federal income tax takes about ${spoken(v.fed)}.`],
   [8, `Social Security and Medicare take ${spoken(v.fica)}.`],
