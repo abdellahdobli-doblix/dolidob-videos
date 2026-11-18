@@ -17,7 +17,7 @@ const lines = custom ? custom.lines.map((l) => [l.at, l.text]) : [
   [0, `In ${name}, a ${spoken(v.income)} salary leaves you with only ${spoken(v.net)}.`],
   [5, `Federal income tax takes about ${spoken(v.fed)}.`],
   [8, `Social Security and Medicare take ${spoken(v.fica)}.`],
-  [11, v.noStateTax ? "And there is no state income tax on wages." : `${name} income tax takes ${spoken(v.stateTax)}.`],
+  [11, v.stateVoice ? String(v.stateVoice) : v.noStateTax ? "And there is no state income tax on wages." : `${name} income tax takes ${spoken(v.stateTax)}.`],
   [15, `That is about ${spoken(v.net / 12)} a month.`],
   [19, "Remember, this is an estimate, not tax advice."],
   [23, "Try it with your own numbers at dolidob dot com."],
