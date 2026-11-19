@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       payload:
-        description: "JSON with stateName, income, fed, fica, stateTax, noStateTax, net, status"
+        description: "JSON with stateName, income, fed, fica, stateTax, noStateTax, net, status; optional stateLabel and stateVoice for the state line"
         required: true
         type: string
       run_label:

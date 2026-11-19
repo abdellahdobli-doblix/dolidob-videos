@@ -8,6 +8,7 @@
     {"id":"fica","type":"number","label":"Social Security + Medicare","default":6503},
     {"id":"stateTax","type":"number","label":"State income tax","default":0},
     {"id":"noStateTax","type":"boolean","label":"State has no wage tax","default":true},
+    {"id":"stateLabel","type":"string","label":"Optional label for the state line (income tax and/or employee contributions)","default":""},
     {"id":"net","type":"number","label":"Take-home per year","default":68628},
     {"id":"status","type":"string","label":"Filing status","default":"single"}
   ]'
@@ -114,7 +115,7 @@
       q("#hookTax").textContent = "Taxes take " + usd(taxes);
       q("#c1v").textContent = "-" + usd(fed);
       q("#c2v").textContent = "-" + usd(fica);
-      q("#c3l").textContent = v.noStateTax ? "No state income tax" : v.stateName + " income tax";
+      q("#c3l").textContent = v.stateLabel ? String(v.stateLabel) : v.noStateTax ? "No state income tax" : v.stateName + " income tax";
       q("#c3v").textContent = v.noStateTax ? "$0" : "-" + usd(stTax);
       q("#barLabel").textContent = "Taxes " + pctTax + "%   |   You keep " + (100 - pctTax) + "%";
       q("#recapMonth").textContent = "about " + usd(net / 12) + " a month";
