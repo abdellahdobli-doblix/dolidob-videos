@@ -8,12 +8,15 @@ on:
         required: true
         type: string
       mode:
-        description: "scenes = animated scene clips in podcast/scenes; cast = character template"
+        description: "scenes = scene clips; cast = character template; audio = only build the voices and commit them to lipsync/run"
         required: false
         default: scenes
         type: string
 
 run-name: "podcast ${{ inputs.run_label }}"
+
+permissions:
+  contents: write
 
 jobs:
   render:
@@ -53,34 +56,49 @@ jobs:
           TTS_PROVIDER: gemini
         run: node ../scripts/make_dialogue.mjs
 
+      - name: Save the voices for lip sync (audio mode)
+        if: inputs.mode == 'audio'
+        working-directory: podcast
+        run: |
+          mkdir -p ../lipsync/run
+          cp tmp/line*.wav timing.js assets/voice.mp3 ../lipsync/run/
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lipsync/run
+          git commit -m "Voices for lip sync (${{ inputs.run_label }})"
+          git push
+
       - name: Compose scene clips, subtitles and cards
         if: inputs.mode == 'scenes'
         working-directory: podcast
         run: python ../scripts/compose_scenes.py
 
       - name: Prepare browser
-        if: inputs.mode != 'scenes'
+        if: inputs.mode == 'cast'
         run: npx --yes hyperframes browser ensure
 
       - name: Lint and check
-        if: inputs.mode != 'scenes'
+        if: inputs.mode == 'cast'
         working-directory: podcast
         run: |
           npx --yes hyperframes lint
           npx --yes hyperframes check || echo "check reported warnings"
 
       - name: Render 1080x1920
-        if: inputs.mode != 'scenes'
+        if: inputs.mode == 'cast'
         working-directory: podcast
         run: |
           mkdir -p out
           npx --yes hyperframes render --quality high --fps 30 --output out/video.mp4
 
       - name: Probe result
+        if: inputs.mode != 'audio'
         working-directory: podcast
         run: ffprobe -v error -show_entries stream=codec_type,width,height,duration -of default=nw=1 out/video.mp4
 
       - uses: actions/upload-artifact@v4
+        if: inputs.mode != 'audio'
         with:
           name: video
           path: podcast/out/video.mp4
