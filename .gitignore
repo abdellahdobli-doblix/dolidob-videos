@@ -6,3 +6,6 @@ renders/
 promo/out
 promo/assets/voice.mp3
 promo/tmp
+podcast/tmp/
+podcast/out/
+podcast/assets/voice.mp3
