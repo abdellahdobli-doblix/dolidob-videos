@@ -110,7 +110,7 @@ if (provider === "gemini" && gkey) {
       }
       const body = (await res.text()).slice(0, 200);
       console.error(`Gemini error ${res.status} on line ${i}: ${body}`);
-      if (res.status !== 429 && res.status < 500) break;
+      if ((res.status !== 429 && res.status < 500) || /spending cap|per day|billing/i.test(body)) break; // not transient
       await new Promise((r) => setTimeout(r, 25000));
     }
   }
