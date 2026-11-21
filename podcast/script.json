@@ -160,5 +160,13 @@
   "end": {
     "dob": "celebrate",
     "doli": "point"
+  },
+  "geminiVoices": {
+    "doli": "Aoede",
+    "dob": "Puck"
+  },
+  "geminiStyle": {
+    "dob": "Say in a casual, curious young man's voice, natural podcast pace",
+    "doli": "Say in a warm, confident young woman's voice, clear and friendly, natural podcast pace"
   }
 }

@@ -44,7 +44,8 @@ jobs:
         working-directory: podcast
         env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-          TTS_PROVIDER: kokoro
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TTS_PROVIDER: gemini
         run: node ../scripts/make_dialogue.mjs
 
       - name: Prepare browser

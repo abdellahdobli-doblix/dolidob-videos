@@ -56,7 +56,7 @@ function mouthFrom(file) {
   return out.map(([a, b]) => [Math.round(a * 100) / 100, Math.round(b * 100) / 100]);
 }
 
-// Voice: Kokoro (free, open model, runs in the workflow) by default. Set TTS_PROVIDER=elevenlabs to use
+// Voice: TTS_PROVIDER picks gemini, elevenlabs or kokoro (free, open model, runs in the workflow).
 // ElevenLabs first; any line it cannot speak (no key, quota used up) falls back to Kokoro.
 const provider = process.env.TTS_PROVIDER || "kokoro";
 const kokoroVoices = script.kokoroVoices || { doli: "af_heart", dob: "am_michael" };
@@ -74,6 +74,44 @@ if (provider === "elevenlabs" && key) {
       writeFileSync(files[i], Buffer.from(await res.arrayBuffer()));
     } else {
       console.error(`ElevenLabs error ${res.status} on line ${i}: ${(await res.text()).slice(0, 200)}`);
+    }
+  }
+}
+// Gemini TTS (Google AI Studio free tier): one request per line so each line keeps its own timing and
+// lip sync. Returns raw 24 kHz 16-bit mono PCM, saved as WAV. Rate limits (429) are waited out.
+const gkey = process.env.GEMINI_API_KEY || "";
+const gmodel = process.env.GEMINI_TTS_MODEL || "gemini-2.5-flash-preview-tts";
+const geminiVoices = script.geminiVoices || { doli: "Aoede", dob: "Puck" };
+const wav = (pcm) => {
+  const h = Buffer.alloc(44);
+  h.write("RIFF", 0); h.writeUInt32LE(36 + pcm.length, 4); h.write("WAVEfmt ", 8); h.writeUInt32LE(16, 16);
+  h.writeUInt16LE(1, 20); h.writeUInt16LE(1, 22); h.writeUInt32LE(24000, 24); h.writeUInt32LE(48000, 28);
+  h.writeUInt16LE(2, 32); h.writeUInt16LE(16, 34); h.write("data", 36); h.writeUInt32LE(pcm.length, 40);
+  return Buffer.concat([h, pcm]);
+};
+if (provider === "gemini" && gkey) {
+  for (let i = 0; i < script.lines.length; i++) {
+    const line = script.lines[i];
+    const style = script.geminiStyle?.[line.speaker] || "Say in a friendly, natural podcast tone";
+    for (let attempt = 0; attempt < 4 && !files[i]; attempt++) {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${gmodel}:generateContent`, {
+        method: "POST",
+        headers: { "x-goog-api-key": gkey, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `${style}: ${line.text}` }] }],
+          generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: geminiVoices[line.speaker] } } } },
+        }),
+      });
+      if (res.ok) {
+        const data = (await res.json()).candidates?.[0]?.content?.parts?.find((p) => p.inlineData)?.inlineData?.data;
+        if (data) { files[i] = `tmp/line${i}.wav`; writeFileSync(files[i], wav(Buffer.from(data, "base64"))); }
+        else console.error(`Gemini returned no audio on line ${i}`);
+        break;
+      }
+      const body = (await res.text()).slice(0, 200);
+      console.error(`Gemini error ${res.status} on line ${i}: ${body}`);
+      if (res.status !== 429 && res.status < 500) break;
+      await new Promise((r) => setTimeout(r, 25000));
     }
   }
 }
