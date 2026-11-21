@@ -7,6 +7,11 @@ on:
         description: "Label so the caller can find this run"
         required: true
         type: string
+      mode:
+        description: "scenes = animated scene clips in podcast/scenes; cast = character template"
+        required: false
+        default: scenes
+        type: string
 
 run-name: "podcast ${{ inputs.run_label }}"
 
@@ -33,7 +38,7 @@ jobs:
       - name: Install Kokoro text-to-speech (free, Apache-2.0)
         run: |
           sudo apt-get install -y espeak-ng
-          pip install "kokoro>=0.9.4" soundfile
+          pip install "kokoro>=0.9.4" soundfile pillow numpy
 
       - uses: actions/cache@v4
         with:
@@ -48,16 +53,24 @@ jobs:
           TTS_PROVIDER: gemini
         run: node ../scripts/make_dialogue.mjs
 
+      - name: Compose scene clips, subtitles and cards
+        if: inputs.mode == 'scenes'
+        working-directory: podcast
+        run: python ../scripts/compose_scenes.py
+
       - name: Prepare browser
+        if: inputs.mode != 'scenes'
         run: npx --yes hyperframes browser ensure
 
       - name: Lint and check
+        if: inputs.mode != 'scenes'
         working-directory: podcast
         run: |
           npx --yes hyperframes lint
           npx --yes hyperframes check || echo "check reported warnings"
 
       - name: Render 1080x1920
+        if: inputs.mode != 'scenes'
         working-directory: podcast
         run: |
           mkdir -p out

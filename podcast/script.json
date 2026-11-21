@@ -23,7 +23,8 @@
           "pose": "pocket",
           "at": "seventy-five"
         }
-      }
+      },
+      "scene": 1
     },
     {
       "speaker": "doli",
@@ -33,12 +34,14 @@
           "pose": "confused",
           "at": "but you"
         }
-      }
+      },
+      "scene": 2
     },
     {
       "speaker": "dob",
       "text": "Wait, really? Why not?",
-      "react": {}
+      "react": {},
+      "scene": 2
     },
     {
       "speaker": "doli",
@@ -53,7 +56,8 @@
           "pose": "think",
           "at": "Federal"
         }
-      }
+      },
+      "scene": 3
     },
     {
       "speaker": "doli",
@@ -68,7 +72,8 @@
           "pose": "armscrossed",
           "at": "Social"
         }
-      }
+      },
+      "scene": 4
     },
     {
       "speaker": "dob",
@@ -78,7 +83,8 @@
           "pose": "phone",
           "at": "different"
         }
-      }
+      },
+      "scene": 5
     },
     {
       "speaker": "doli",
@@ -93,7 +99,8 @@
           "pose": "stressed",
           "at": "California takes"
         }
-      }
+      },
+      "scene": 5
     },
     {
       "speaker": "dob",
@@ -103,7 +110,8 @@
           "pose": "point",
           "at": "keep"
         }
-      }
+      },
+      "scene": 6
     },
     {
       "speaker": "doli",
@@ -118,7 +126,8 @@
           "pose": "tax",
           "at": "California"
         }
-      }
+      },
+      "scene": 6
     },
     {
       "speaker": "dob",
@@ -128,7 +137,8 @@
           "pose": "shrug",
           "at": "just for"
         }
-      }
+      },
+      "scene": 7
     },
     {
       "speaker": "doli",
@@ -143,7 +153,8 @@
           "pose": "idea",
           "at": "dolidob"
         }
-      }
+      },
+      "scene": 8
     }
   ],
   "end": {
