@@ -11,7 +11,7 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync, copyFileSync } from
 const script = JSON.parse(readFileSync("script.json", "utf8"));
 const key = process.env.ELEVENLABS_API_KEY || "";
 const model = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
-const GAP = 0.3; // pause between lines, seconds
+const GAP = 0.22; // pause between lines, seconds
 const LEAD = 0.4; // silence before the first line
 const TAIL = 1.6; // hold after the last line
 mkdirSync("assets", { recursive: true });

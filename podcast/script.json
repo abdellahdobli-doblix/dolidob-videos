@@ -19,21 +19,21 @@
         "color": "sky"
       },
       "react": {
-        "doli": "ok"
+        "doli": "pocket"
       }
     },
     {
       "speaker": "doli",
       "text": "Nice! Same salary, but you won't take home the same amount.",
       "react": {
-        "dob": "shrug2"
+        "dob": "confused"
       }
     },
     {
       "speaker": "dob",
       "text": "Wait, really? Why not?",
       "react": {
-        "doli": "point"
+        "doli": "idea"
       }
     },
     {
@@ -50,21 +50,21 @@
     },
     {
       "speaker": "doli",
-      "text": "Social Security and Medicare are the same too: about five thousand seven hundred dollars.",
+      "text": "Social Security and Medicare are the same too: about fifty-seven hundred.",
       "card": {
         "label": "Social Security + Medicare",
         "value": "-$5,738",
         "color": "violet"
       },
       "react": {
-        "dob": "idea"
+        "dob": "armscrossed"
       }
     },
     {
       "speaker": "dob",
       "text": "So what's different?",
       "react": {
-        "doli": "search"
+        "doli": "phone"
       }
     },
     {
@@ -83,26 +83,26 @@
       "speaker": "dob",
       "text": "So how much do I keep?",
       "react": {
-        "doli": "sweat"
+        "doli": "point"
       }
     },
     {
       "speaker": "doli",
-      "text": "In Texas, about sixty-one thousand six hundred a year. In California, about fifty-seven thousand six hundred.",
+      "text": "Texas: about sixty-one thousand six hundred. California: about fifty-seven thousand six hundred.",
       "card": {
         "label": "Take-home: Texas vs California",
         "value": "$61,593 vs $57,565",
         "color": "gold"
       },
       "react": {
-        "dob": "think"
+        "dob": "tax"
       }
     },
     {
       "speaker": "dob",
       "text": "That's four thousand dollars a year, just for the state!",
       "react": {
-        "doli": "laugh"
+        "doli": "shrug"
       }
     },
     {
@@ -114,12 +114,12 @@
         "color": "gold"
       },
       "react": {
-        "dob": "thumbsup"
+        "dob": "idea"
       }
     }
   ],
   "end": {
     "dob": "celebrate",
-    "doli": "stars"
+    "doli": "point"
   }
 }

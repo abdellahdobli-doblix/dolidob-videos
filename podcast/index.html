@@ -27,24 +27,22 @@
       .center { left: 0; width: 1080px; text-align: center; }
       .kicker { top: 230px; font-weight: 700; font-size: 30px; letter-spacing: 4px; text-transform: uppercase; color: var(--sky); }
       .title { top: 278px; padding: 0 90px; font-family: var(--display); font-weight: 800; font-size: 62px; line-height: 1.05; }
-      .onair { top: 430px; left: 465px; width: 150px; padding: 6px 0; border-radius: 999px; background: #ff5a5a; color: #fff; font-weight: 700; font-size: 22px; letter-spacing: 2px; text-align: center; }
-      .card { position: absolute; left: 150px; top: 500px; width: 780px; height: 230px; border-radius: 32px; background: #16224fee; border: 2px solid #ffffff22; padding: 28px 40px; opacity: 0; text-align: center; }
+      .onair { top: 175px; left: 465px; width: 150px; padding: 6px 0; border-radius: 999px; background: #ff5a5a; color: #fff; font-weight: 700; font-size: 22px; letter-spacing: 2px; text-align: center; }
+      .card { position: absolute; left: 150px; top: 420px; width: 780px; height: 210px; z-index: 3; border-radius: 32px; background: #16224fee; border: 2px solid #ffffff22; padding: 28px 40px; opacity: 0; text-align: center; }
       .card .l { font-size: 34px; font-weight: 600; color: #c9d6f5; }
       .card .v { font-family: var(--display); font-weight: 800; font-size: 100px; line-height: 1.1; margin-top: 12px; }
       .card .v.long { font-size: 68px; margin-top: 26px; }
       .sky { color: var(--sky); } .violet { color: var(--violet); } .pink { color: var(--pink); } .gold { color: var(--gold); } .mint { color: var(--mint); }
-      .who { position: absolute; top: 770px; height: 470px; transform-origin: 50% 100%; }
-      .who img { position: absolute; left: 0; top: 0; height: 470px; width: auto; }
+      .who { position: absolute; top: 640px; width: 447px; height: 800px; transform-origin: 50% 100%; }
+      .who img { position: absolute; left: 0; top: 0; width: 447px; height: 800px; }
       .who .open, .who .pose { opacity: 0; }
-      .who img.pose { height: 470px; }
-      .desk { position: absolute; left: 0; top: 1226px; width: 1080px; height: 44px;
-        background: linear-gradient(180deg, #3b528f, #16224f); box-shadow: 0 -2px 0 #6f8bd6 inset, 0 16px 36px #000a; }
-      .tag { position: absolute; top: 1290px; text-align: center; font-family: var(--display); font-weight: 800; font-size: 44px; }
-      .sub { position: absolute; left: 70px; top: 1370px; width: 940px; height: 230px; padding: 20px 36px; border-radius: 28px; background: #0b1430e6; border: 2px solid #ffffff26;
+      .floor { position: absolute; left: 0; top: 1380px; width: 1080px; height: 120px; background: radial-gradient(520px 60px at 50% 40%, #00000066, transparent 70%); }
+            .tag { position: absolute; top: 1395px; font-size: 34px !important; text-align: center; font-family: var(--display); font-weight: 800; font-size: 44px; }
+      .sub { position: absolute; left: 70px; top: 1450px; width: 940px; height: 210px; z-index: 4; padding: 20px 36px; border-radius: 28px; background: #0b1430e6; border: 2px solid #ffffff26;
         display: flex; flex-direction: column; justify-content: center; text-align: center; font-weight: 600; line-height: 1.24; opacity: 0; }
       .sub b { font-family: var(--display); font-weight: 800; font-size: 30px; letter-spacing: 2px; display: block; margin-bottom: 6px; }
-      .foot { top: 1625px; font-size: 24px; font-weight: 500; color: #8fa4d8; }
-      .brand { top: 1690px; left: 340px; width: 400px; padding: 14px 0; border-radius: 999px; background: var(--gold); color: var(--night); font-family: var(--display); font-weight: 800; font-size: 44px; text-align: center; }
+      .foot { top: 1680px; font-size: 24px; font-weight: 500; color: #8fa4d8; }
+      .brand { top: 1730px; left: 340px; width: 400px; padding: 14px 0; border-radius: 999px; background: var(--gold); color: var(--night); font-family: var(--display); font-weight: 800; font-size: 44px; text-align: center; }
     </style>
   </head>
   <body>
@@ -55,43 +53,13 @@
       <div class="abs center title" id="title">Texas vs California on $75,000</div>
       <div class="abs onair">● ON AIR</div>
 
-      <!-- Dob and Doli: characters made by the channel owner with Gemini, keyed from a green background -->
-      <div class="who" id="dob" style="left:50px; width:442px">
-        <img class="closed" id="dobClosed" src="assets/dob-closed.png" alt="" />
-        <img class="open" id="dobOpen" src="assets/dob-open.png" alt="" />
-        <img class="pose" id="dob-binoculars" src="assets/poses/dob-binoculars.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-celebrate" src="assets/poses/dob-celebrate.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-cheer" src="assets/poses/dob-cheer.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-fist" src="assets/poses/dob-fist.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-idea" src="assets/poses/dob-idea.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-point" src="assets/poses/dob-point.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-relax" src="assets/poses/dob-relax.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-run" src="assets/poses/dob-run.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-shrug" src="assets/poses/dob-shrug.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-shrug2" src="assets/poses/dob-shrug2.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-stressed" src="assets/poses/dob-stressed.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-think" src="assets/poses/dob-think.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-thumbsup" src="assets/poses/dob-thumbsup.png" alt="" style="left:-39px; width:520px" />
-        <img class="pose" id="dob-wave" src="assets/poses/dob-wave.png" alt="" style="left:-39px; width:520px" />
-      </div>
-      <div class="who" id="doli" style="left:560px; width:471px">
-        <img class="closed" id="doliClosed" src="assets/doli-closed.png" alt="" />
-        <img class="open" id="doliOpen" src="assets/doli-open.png" alt="" />
-        <img class="pose" id="doli-angry" src="assets/poses/doli-angry.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-dizzy" src="assets/poses/doli-dizzy.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-laugh" src="assets/poses/doli-laugh.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-ok" src="assets/poses/doli-ok.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-point" src="assets/poses/doli-point.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-search" src="assets/poses/doli-search.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-serious" src="assets/poses/doli-serious.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-sleep" src="assets/poses/doli-sleep.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-stars" src="assets/poses/doli-stars.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-sweat" src="assets/poses/doli-sweat.png" alt="" style="left:-25px; width:520px" />
-        <img class="pose" id="doli-wink" src="assets/poses/doli-wink.png" alt="" style="left:-25px; width:520px" />
-      </div>
-      <div class="desk"></div>
-      <div class="tag" style="left:50px; width:442px; color:#93c5fd">Dob</div>
-      <div class="tag" style="left:560px; width:471px; color:#fcd34d">Doli</div>
+      <!-- Dob and Doli: full-body characters made by the channel owner with Gemini, keyed from a green
+           background. Every pose is the same 614x1100 frame, so poses line up without offsets. -->
+      <div class="floor"></div>
+      <div class="who" id="dob" style="left:40px"></div>
+      <div class="who" id="doli" style="left:593px"></div>
+      <div class="tag" style="left:40px; width:447px; color:#93c5fd">Dob</div>
+      <div class="tag" style="left:593px; width:447px; color:#fcd34d">Doli</div>
 
       <div id="cards"></div>
       <div id="subs"></div>
@@ -103,6 +71,17 @@
       const T = window.TIMING || { total: 45, lines: [] };
       const q = (s) => document.querySelector(s);
       if (T.title) q("#title").textContent = T.title.replace(/ \(2026\)$/, "");
+      const POSES = {
+        dob: ["armscrossed", "point", "idea", "stressed", "confused", "facepalm", "tax", "celebrate", "think"],
+        doli: ["pocket", "point", "idea", "shrug", "phone"],
+      };
+      Object.entries(POSES).forEach(([who, poses]) => {
+        const box = q(`#${who}`);
+        const add = (id, file, cls) => { const im = document.createElement("img"); im.id = id; im.className = cls; im.src = `assets/cast/${file}.png`; im.alt = ""; box.appendChild(im); };
+        add(`${who}Closed`, `${who}-closed`, "closed");
+        add(`${who}Open`, `${who}-open`, "open");
+        poses.forEach((p) => add(`${who}-${p}`, `${who}-${p}`, "pose"));
+      });
       const tl = gsap.timeline({ paused: true });
       const name = { dob: "Dob", doli: "Doli" };
       const color = { dob: "#93c5fd", doli: "#fcd34d" };
@@ -136,14 +115,14 @@
       });
 
       // The speaker is fully visible and bounces once; the listener stays in full colour, only a little faded.
-      tl.set(["#dob", "#doli"], { opacity: 0.8 }, 0);
+      tl.set(["#dob", "#doli"], { opacity: 0.85 }, 0);
       tl.set(["#dobOpen", "#doliOpen"], { opacity: 0 }, 0);
       T.lines.forEach((l) => {
         const who = `#${l.speaker}`;
         const other = l.speaker === "dob" ? "#doli" : "#dob";
         tl.to(who, { opacity: 1, duration: 0.15 }, l.start);
-        tl.to(other, { opacity: 0.8, duration: 0.15 }, l.start);
-        tl.fromTo(who, { y: 0 }, { y: -12, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.out" }, l.start);
+        tl.to(other, { opacity: 0.85, duration: 0.15 }, l.start);
+        tl.fromTo(who, { y: 0 }, { y: -8, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.out" }, l.start);
         // Lip sync: the mouth is open only while the voice is loud (measured from the audio in make_dialogue.mjs).
         (l.mouth || []).forEach(([a, b]) => {
           tl.set(`${who}Open`, { opacity: 1 }, a);
