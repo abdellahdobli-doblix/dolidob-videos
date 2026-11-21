@@ -1,18 +1,118 @@
 {
   "title": "Texas vs California on $75,000 (2026)",
-  "voices": { "doli": "cgSgspJ2msm6clMCkdW9", "dob": "bIHbv24MWmeRgasZH58o" },
+  "voices": {
+    "doli": "cgSgspJ2msm6clMCkdW9",
+    "dob": "bIHbv24MWmeRgasZH58o"
+  },
   "source": "Figures from https://dolidob.com/data/take-home-2026.json (single filer, paid every two weeks, no 401(k)).",
   "lines": [
-    { "speaker": "dob", "text": "Doli, I got two job offers. Same pay, seventy-five thousand dollars. One in Texas, one in California.", "card": { "label": "Salary", "value": "$75,000", "color": "sky" } },
-    { "speaker": "doli", "text": "Nice! Same salary, but you won't take home the same amount." },
-    { "speaker": "dob", "text": "Wait, really? Why not?" },
-    { "speaker": "doli", "text": "Federal tax is the same in both: about seven thousand six hundred seventy dollars.", "card": { "label": "Federal income tax", "value": "-$7,670", "color": "sky" } },
-    { "speaker": "doli", "text": "Social Security and Medicare are the same too: about five thousand seven hundred dollars.", "card": { "label": "Social Security + Medicare", "value": "-$5,738", "color": "violet" } },
-    { "speaker": "dob", "text": "So what's different?" },
-    { "speaker": "doli", "text": "The state. Texas has no income tax on wages. California takes about four thousand dollars, with state disability insurance.", "card": { "label": "California tax + SDI", "value": "-$4,027", "color": "pink" } },
-    { "speaker": "dob", "text": "So how much do I keep?" },
-    { "speaker": "doli", "text": "In Texas, about sixty-one thousand six hundred a year. In California, about fifty-seven thousand six hundred.", "card": { "label": "Take-home: Texas vs California", "value": "$61,593 vs $57,565", "color": "gold" } },
-    { "speaker": "dob", "text": "That's four thousand dollars a year, just for the state!" },
-    { "speaker": "doli", "text": "Check your own state and salary free at dolidob dot com. Estimates only, not tax advice.", "card": { "label": "Try it free", "value": "dolidob.com", "color": "gold" } }
-  ]
+    {
+      "speaker": "dob",
+      "text": "Doli, I got two job offers. Same pay, seventy-five thousand dollars. One in Texas, one in California.",
+      "card": {
+        "label": "Salary",
+        "value": "$75,000",
+        "color": "sky"
+      },
+      "react": {
+        "doli": "ok"
+      }
+    },
+    {
+      "speaker": "doli",
+      "text": "Nice! Same salary, but you won't take home the same amount.",
+      "react": {
+        "dob": "think"
+      }
+    },
+    {
+      "speaker": "dob",
+      "text": "Wait, really? Why not?",
+      "react": {
+        "doli": "wink"
+      }
+    },
+    {
+      "speaker": "doli",
+      "text": "Federal tax is the same in both: about seven thousand six hundred seventy dollars.",
+      "card": {
+        "label": "Federal income tax",
+        "value": "-$7,670",
+        "color": "sky"
+      },
+      "react": {
+        "dob": "think"
+      }
+    },
+    {
+      "speaker": "doli",
+      "text": "Social Security and Medicare are the same too: about five thousand seven hundred dollars.",
+      "card": {
+        "label": "Social Security + Medicare",
+        "value": "-$5,738",
+        "color": "violet"
+      }
+    },
+    {
+      "speaker": "dob",
+      "text": "So what's different?",
+      "react": {
+        "doli": "serious"
+      }
+    },
+    {
+      "speaker": "doli",
+      "text": "The state. Texas has no income tax on wages. California takes about four thousand dollars, with state disability insurance.",
+      "card": {
+        "label": "California tax + SDI",
+        "value": "-$4,027",
+        "color": "pink"
+      },
+      "react": {
+        "dob": "stressed"
+      }
+    },
+    {
+      "speaker": "dob",
+      "text": "So how much do I keep?",
+      "react": {
+        "doli": "ok"
+      }
+    },
+    {
+      "speaker": "doli",
+      "text": "In Texas, about sixty-one thousand six hundred a year. In California, about fifty-seven thousand six hundred.",
+      "card": {
+        "label": "Take-home: Texas vs California",
+        "value": "$61,593 vs $57,565",
+        "color": "gold"
+      },
+      "react": {
+        "dob": "think"
+      }
+    },
+    {
+      "speaker": "dob",
+      "text": "That's four thousand dollars a year, just for the state!",
+      "react": {
+        "doli": "laugh"
+      }
+    },
+    {
+      "speaker": "doli",
+      "text": "Check your own state and salary free at dolidob dot com. Estimates only, not tax advice.",
+      "card": {
+        "label": "Try it free",
+        "value": "dolidob.com",
+        "color": "gold"
+      },
+      "react": {
+        "dob": "thumbsup"
+      }
+    }
+  ],
+  "end": {
+    "dob": "wave",
+    "doli": "wink"
+  }
 }

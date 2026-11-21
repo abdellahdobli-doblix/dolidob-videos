@@ -35,7 +35,8 @@
       .sky { color: var(--sky); } .violet { color: var(--violet); } .pink { color: var(--pink); } .gold { color: var(--gold); } .mint { color: var(--mint); }
       .who { position: absolute; top: 770px; height: 470px; transform-origin: 50% 100%; }
       .who img { position: absolute; left: 0; top: 0; height: 470px; width: auto; }
-      .who .open { opacity: 0; }
+      .who .open, .who .pose { opacity: 0; }
+      .who img.pose { height: 470px; }
       .desk { position: absolute; left: 0; top: 1226px; width: 1080px; height: 44px;
         background: linear-gradient(180deg, #3b528f, #16224f); box-shadow: 0 -2px 0 #6f8bd6 inset, 0 16px 36px #000a; }
       .tag { position: absolute; top: 1290px; text-align: center; font-family: var(--display); font-weight: 800; font-size: 44px; }
@@ -56,12 +57,22 @@
 
       <!-- Dob and Doli: characters made by the channel owner with Gemini, keyed from a green background -->
       <div class="who" id="dob" style="left:50px; width:442px">
-        <img class="closed" src="assets/dob-closed.png" alt="" />
+        <img class="closed" id="dobClosed" src="assets/dob-closed.png" alt="" />
         <img class="open" id="dobOpen" src="assets/dob-open.png" alt="" />
+        <img class="pose" id="dob-think" src="assets/poses/dob-think.png" alt="" style="left:-39px; width:520px" />
+        <img class="pose" id="dob-stressed" src="assets/poses/dob-stressed.png" alt="" style="left:-39px; width:520px" />
+        <img class="pose" id="dob-thumbsup" src="assets/poses/dob-thumbsup.png" alt="" style="left:-39px; width:520px" />
+        <img class="pose" id="dob-wave" src="assets/poses/dob-wave.png" alt="" style="left:-39px; width:520px" />
+        <img class="pose" id="dob-shrug" src="assets/poses/dob-shrug.png" alt="" style="left:-39px; width:520px" />
+        <img class="pose" id="dob-cheer" src="assets/poses/dob-cheer.png" alt="" style="left:-39px; width:520px" />
       </div>
       <div class="who" id="doli" style="left:560px; width:471px">
-        <img class="closed" src="assets/doli-closed.png" alt="" />
+        <img class="closed" id="doliClosed" src="assets/doli-closed.png" alt="" />
         <img class="open" id="doliOpen" src="assets/doli-open.png" alt="" />
+        <img class="pose" id="doli-ok" src="assets/poses/doli-ok.png" alt="" style="left:-25px; width:520px" />
+        <img class="pose" id="doli-wink" src="assets/poses/doli-wink.png" alt="" style="left:-25px; width:520px" />
+        <img class="pose" id="doli-laugh" src="assets/poses/doli-laugh.png" alt="" style="left:-25px; width:520px" />
+        <img class="pose" id="doli-serious" src="assets/poses/doli-serious.png" alt="" style="left:-25px; width:520px" />
       </div>
       <div class="desk"></div>
       <div class="tag" style="left:50px; width:442px; color:#93c5fd">Dob</div>
@@ -124,6 +135,28 @@
           tl.set(`${who}Open`, { opacity: 0 }, b);
         });
       });
+      // Reactions: while one speaks, the listener can switch to an expression image (react), and both get
+      // an end pose after the last line. The talking pair is hidden while a pose is shown.
+      const showPose = (who, pose, from, until) => {
+        const id = `#${who}-${pose}`;
+        if (!document.querySelector(id)) return;
+        tl.set([`#${who}Closed`, `#${who}Open`], { opacity: 0 }, from);
+        tl.fromTo(id, { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" }, from);
+        tl.set(id, { opacity: 0 }, until);
+        tl.set(`#${who}Closed`, { opacity: 1 }, until);
+      };
+      T.lines.forEach((l, i) => {
+        const until = i + 1 < T.lines.length ? T.lines[i + 1].start : T.total;
+        Object.entries(l.react || {}).forEach(([who, pose]) => {
+          if (who === l.speaker) return;
+          const isLast = i === T.lines.length - 1 && T.end && T.end[who];
+          showPose(who, pose, l.start + 0.15, isLast ? l.end - 0.6 : until);
+        });
+      });
+      if (T.end && T.lines.length) {
+        const last = T.lines[T.lines.length - 1];
+        Object.entries(T.end).forEach(([who, pose]) => showPose(who, pose, who === last.speaker ? last.end + 0.1 : last.end - 0.6, T.total + 1));
+      }
       tl.to("#root", { opacity: 1, duration: 0.01 }, Math.max(0, T.total - 0.01));
       window.__timelines["main"] = tl;
     </script>

@@ -1,6 +1,10 @@
 window.TIMING = {
  "total": 55.6,
  "title": "Texas vs California on $75,000 (2026)",
+ "end": {
+  "dob": "wave",
+  "doli": "wink"
+ },
  "lines": [
   {
    "speaker": "dob",
@@ -10,6 +14,9 @@ window.TIMING = {
     "value": "$75,000",
     "color": "sky"
    },
+   "react": {
+    "doli": "ok"
+   },
    "start": 0.4,
    "end": 6.94,
    "mouth": []
@@ -18,6 +25,9 @@ window.TIMING = {
    "speaker": "doli",
    "text": "Nice! Same salary, but you won't take home the same amount.",
    "card": null,
+   "react": {
+    "dob": "think"
+   },
    "start": 7.24,
    "end": 11.47,
    "mouth": []
@@ -26,6 +36,9 @@ window.TIMING = {
    "speaker": "dob",
    "text": "Wait, really? Why not?",
    "card": null,
+   "react": {
+    "doli": "wink"
+   },
    "start": 11.77,
    "end": 13.37,
    "mouth": []
@@ -37,6 +50,9 @@ window.TIMING = {
     "label": "Federal income tax",
     "value": "-$7,670",
     "color": "sky"
+   },
+   "react": {
+    "dob": "think"
    },
    "start": 13.67,
    "end": 19.05,
@@ -50,6 +66,7 @@ window.TIMING = {
     "value": "-$5,738",
     "color": "violet"
    },
+   "react": null,
    "start": 19.35,
    "end": 24.73,
    "mouth": []
@@ -58,6 +75,9 @@ window.TIMING = {
    "speaker": "dob",
    "text": "So what's different?",
    "card": null,
+   "react": {
+    "doli": "serious"
+   },
    "start": 25.04,
    "end": 26.64,
    "mouth": []
@@ -70,6 +90,9 @@ window.TIMING = {
     "value": "-$4,027",
     "color": "pink"
    },
+   "react": {
+    "dob": "stressed"
+   },
    "start": 26.94,
    "end": 34.25,
    "mouth": []
@@ -78,6 +101,9 @@ window.TIMING = {
    "speaker": "dob",
    "text": "So how much do I keep?",
    "card": null,
+   "react": {
+    "doli": "ok"
+   },
    "start": 34.55,
    "end": 36.86,
    "mouth": []
@@ -90,6 +116,9 @@ window.TIMING = {
     "value": "$61,593 vs $57,565",
     "color": "gold"
    },
+   "react": {
+    "dob": "think"
+   },
    "start": 37.15,
    "end": 43.3,
    "mouth": []
@@ -98,6 +127,9 @@ window.TIMING = {
    "speaker": "dob",
    "text": "That's four thousand dollars a year, just for the state!",
    "card": null,
+   "react": {
+    "doli": "laugh"
+   },
    "start": 43.61,
    "end": 47.46,
    "mouth": []
@@ -109,6 +141,9 @@ window.TIMING = {
     "label": "Try it free",
     "value": "dolidob.com",
     "color": "gold"
+   },
+   "react": {
+    "dob": "thumbsup"
    },
    "start": 47.75,
    "end": 53.9,

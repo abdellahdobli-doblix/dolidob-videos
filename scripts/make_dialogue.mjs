@@ -83,7 +83,7 @@ let t = LEAD;
 const lines = clips.map((c) => {
   const start = Math.round(t * 100) / 100;
   t += c.dur + GAP;
-  return { speaker: c.speaker, text: c.text, card: c.card || null, start, end: Math.round((start + c.dur) * 100) / 100, mouth: c.mouth.map(([a, b]) => [Math.round((start + a) * 100) / 100, Math.round((start + b) * 100) / 100]), file: c.file };
+  return { speaker: c.speaker, text: c.text, card: c.card || null, react: c.react || null, start, end: Math.round((start + c.dur) * 100) / 100, mouth: c.mouth.map(([a, b]) => [Math.round((start + a) * 100) / 100, Math.round((start + b) * 100) / 100]), file: c.file };
 });
 const total = Math.ceil((t - GAP + TAIL) * 10) / 10;
 
@@ -114,7 +114,7 @@ if (music) {
   copyFileSync("tmp/voice_only.mp3", "assets/voice.mp3");
 }
 
-writeFileSync("timing.js", `window.TIMING = ${JSON.stringify({ total, title: script.title, lines: lines.map(({ file, ...l }) => l) }, null, 1)};\n`);
+writeFileSync("timing.js", `window.TIMING = ${JSON.stringify({ total, title: script.title, end: script.end || null, lines: lines.map(({ file, ...l }) => l) }, null, 1)};\n`);
 const html = readFileSync("index.html", "utf8").replace(/data-duration="[\d.]+"/g, `data-duration="${total}"`);
 writeFileSync("index.html", html);
 console.log(`Dialogue ready: ${lines.length} lines, ${total} s, ${spoken.length} spoken.`);
