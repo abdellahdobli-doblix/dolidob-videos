@@ -134,11 +134,17 @@ spans = [(n, s, scenes[i + 1][1] if i + 1 < len(scenes) else T["total"]) for i, 
 args = ["ffmpeg", "-y", "-loop", "1", "-framerate", str(FPS), "-t", str(T["total"]), "-i", "tmp/overlays/bg.png"]
 filters, last, idx = [], "[0:v]", 1
 for n, s, e in spans:
-    path = f"scenes/scene{n}.mp4"
-    w, h, y0, y1 = picture_rows(path)
-    clip = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]).decode())
-    dur = e - s
-    k = min(1.35, max(0.6, dur / clip))
+    synced = f"scenes_synced/scene{n}.mp4"  # already cropped and timed by lipsync_scenes.py
+    if os.path.exists(synced):
+        path, k, dur = synced, 1.0, e - s
+        w, h = map(int, probe(path, "stream=width,height").split(","))
+        y0, y1 = 0, h
+    else:
+        path = f"scenes/scene{n}.mp4"
+        w, h, y0, y1 = picture_rows(path)
+        clip = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]).decode())
+        dur = e - s
+        k = min(1.35, max(0.6, dur / clip))
     args += ["-i", path]
     filters.append(
         f"[{idx}:v]crop={w}:{y1 - y0}:0:{y0},setpts={k:.4f}*(PTS-STARTPTS),fps={FPS},scale={W}:-2:flags=lanczos,"
