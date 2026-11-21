@@ -19,22 +19,29 @@
         "color": "sky"
       },
       "react": {
-        "doli": "pocket"
-      }
+        "doli": {
+          "pose": "pocket",
+          "at": "seventy-five"
+        }
+      },
+      "talk": "idea"
     },
     {
       "speaker": "doli",
       "text": "Nice! Same salary, but you won't take home the same amount.",
       "react": {
-        "dob": "confused"
-      }
+        "dob": {
+          "pose": "confused",
+          "at": "but you"
+        }
+      },
+      "talk": "pocket"
     },
     {
       "speaker": "dob",
       "text": "Wait, really? Why not?",
-      "react": {
-        "doli": "idea"
-      }
+      "react": {},
+      "talk": "confused"
     },
     {
       "speaker": "doli",
@@ -45,8 +52,12 @@
         "color": "sky"
       },
       "react": {
-        "dob": "think"
-      }
+        "dob": {
+          "pose": "think",
+          "at": "Federal"
+        }
+      },
+      "talk": "idea"
     },
     {
       "speaker": "doli",
@@ -57,15 +68,23 @@
         "color": "violet"
       },
       "react": {
-        "dob": "armscrossed"
-      }
+        "dob": {
+          "pose": "armscrossed",
+          "at": "Social"
+        }
+      },
+      "talk": "pocket"
     },
     {
       "speaker": "dob",
       "text": "So what's different?",
       "react": {
-        "doli": "phone"
-      }
+        "doli": {
+          "pose": "phone",
+          "at": "different"
+        }
+      },
+      "talk": "confused"
     },
     {
       "speaker": "doli",
@@ -76,15 +95,23 @@
         "color": "pink"
       },
       "react": {
-        "dob": "stressed"
-      }
+        "dob": {
+          "pose": "stressed",
+          "at": "California takes"
+        }
+      },
+      "talk": "idea"
     },
     {
       "speaker": "dob",
       "text": "So how much do I keep?",
       "react": {
-        "doli": "point"
-      }
+        "doli": {
+          "pose": "point",
+          "at": "keep"
+        }
+      },
+      "talk": "armscrossed"
     },
     {
       "speaker": "doli",
@@ -95,15 +122,23 @@
         "color": "gold"
       },
       "react": {
-        "dob": "tax"
-      }
+        "dob": {
+          "pose": "tax",
+          "at": "California"
+        }
+      },
+      "talk": "pocket"
     },
     {
       "speaker": "dob",
       "text": "That's four thousand dollars a year, just for the state!",
       "react": {
-        "doli": "shrug"
-      }
+        "doli": {
+          "pose": "shrug",
+          "at": "just for"
+        }
+      },
+      "talk": "confused"
     },
     {
       "speaker": "doli",
@@ -114,8 +149,12 @@
         "color": "gold"
       },
       "react": {
-        "dob": "idea"
-      }
+        "dob": {
+          "pose": "idea",
+          "at": "dolidob"
+        }
+      },
+      "talk": "idea"
     }
   ],
   "end": {

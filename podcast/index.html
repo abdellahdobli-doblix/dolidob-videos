@@ -71,6 +71,9 @@
       const T = window.TIMING || { total: 45, lines: [] };
       const q = (s) => document.querySelector(s);
       if (T.title) q("#title").textContent = T.title.replace(/ \(2026\)$/, "");
+      // Gesture poses whose face matches the front pose: an open-mouth copy exists, so a character can
+      // keep this gesture while talking (line.talk) and the lip sync still works.
+      const TALK = { dob: ["armscrossed", "confused", "idea"], doli: ["pocket", "shrug", "idea"] };
       const POSES = {
         dob: ["armscrossed", "point", "idea", "stressed", "confused", "facepalm", "tax", "celebrate", "think"],
         doli: ["pocket", "point", "idea", "shrug", "phone"],
@@ -81,6 +84,7 @@
         add(`${who}Closed`, `${who}-closed`, "closed");
         add(`${who}Open`, `${who}-open`, "open");
         poses.forEach((p) => add(`${who}-${p}`, `${who}-${p}`, "pose"));
+        (TALK[who] || []).forEach((p) => add(`${who}-${p}-open`, `${who}-${p}-open`, "pose"));
       });
       const tl = gsap.timeline({ paused: true });
       const name = { dob: "Dob", doli: "Doli" };
@@ -124,9 +128,19 @@
         tl.to(other, { opacity: 0.85, duration: 0.15 }, l.start);
         tl.fromTo(who, { y: 0 }, { y: -8, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.out" }, l.start);
         // Lip sync: the mouth is open only while the voice is loud (measured from the audio in make_dialogue.mjs).
+        // With a talk gesture, the front pose is swapped for the gesture and its open-mouth copy.
+        const talk = l.talk && (TALK[l.speaker] || []).includes(l.talk) ? l.talk : null;
+        const shut = talk ? `${who}-${talk}` : `${who}Closed`;
+        const open = talk ? `${who}-${talk}-open` : `${who}Open`;
+        if (talk) {
+          tl.set([`${who}Closed`, `${who}Open`], { opacity: 0 }, l.start);
+          tl.set(shut, { opacity: 1 }, l.start);
+          tl.set([shut, open], { opacity: 0 }, l.end + 0.05);
+          tl.set(`${who}Closed`, { opacity: 1 }, l.end + 0.05);
+        }
         (l.mouth || []).forEach(([a, b]) => {
-          tl.set(`${who}Open`, { opacity: 1 }, a);
-          tl.set(`${who}Open`, { opacity: 0 }, b);
+          tl.set(open, { opacity: 1 }, a);
+          tl.set(open, { opacity: 0 }, b);
         });
       });
       // Reactions: while one speaks, the listener can switch to an expression image (react), and both get
@@ -141,10 +155,14 @@
       };
       T.lines.forEach((l, i) => {
         const until = i + 1 < T.lines.length ? T.lines[i + 1].start : T.total;
-        Object.entries(l.react || {}).forEach(([who, pose]) => {
+        Object.entries(l.react || {}).forEach(([who, r]) => {
           if (who === l.speaker) return;
+          const pose = typeof r === "string" ? r : r.pose;
+          // "at": the reaction lands when those words are spoken (position in the text, scaled to the clip)
+          const k = r.at ? Math.max(0, l.text.indexOf(r.at)) / l.text.length : 0;
+          const from = l.start + 0.15 + k * (l.end - l.start);
           const isLast = i === T.lines.length - 1 && T.end && T.end[who];
-          showPose(who, pose, l.start + 0.15, isLast ? l.end - 0.6 : until);
+          showPose(who, pose, from, isLast ? l.end - 0.6 : until);
         });
       });
       if (T.end && T.lines.length) {

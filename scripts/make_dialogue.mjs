@@ -98,7 +98,7 @@ let t = LEAD;
 const lines = clips.map((c) => {
   const start = Math.round(t * 100) / 100;
   t += c.dur + GAP;
-  return { speaker: c.speaker, text: c.text, card: c.card || null, react: c.react || null, start, end: Math.round((start + c.dur) * 100) / 100, mouth: c.mouth.map(([a, b]) => [Math.round((start + a) * 100) / 100, Math.round((start + b) * 100) / 100]), file: c.file };
+  return { speaker: c.speaker, text: c.text, card: c.card || null, react: c.react || null, talk: c.talk || null, start, end: Math.round((start + c.dur) * 100) / 100, mouth: c.mouth.map(([a, b]) => [Math.round((start + a) * 100) / 100, Math.round((start + b) * 100) / 100]), file: c.file };
 });
 const total = Math.ceil((t - GAP + TAIL) * 10) / 10;
 
