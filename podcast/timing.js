@@ -2,8 +2,8 @@ window.TIMING = {
  "total": 55.6,
  "title": "Texas vs California on $75,000 (2026)",
  "end": {
-  "dob": "wave",
-  "doli": "wink"
+  "dob": "celebrate",
+  "doli": "stars"
  },
  "lines": [
   {
@@ -26,7 +26,7 @@ window.TIMING = {
    "text": "Nice! Same salary, but you won't take home the same amount.",
    "card": null,
    "react": {
-    "dob": "think"
+    "dob": "shrug2"
    },
    "start": 7.24,
    "end": 11.47,
@@ -37,7 +37,7 @@ window.TIMING = {
    "text": "Wait, really? Why not?",
    "card": null,
    "react": {
-    "doli": "wink"
+    "doli": "point"
    },
    "start": 11.77,
    "end": 13.37,
@@ -66,7 +66,9 @@ window.TIMING = {
     "value": "-$5,738",
     "color": "violet"
    },
-   "react": null,
+   "react": {
+    "dob": "idea"
+   },
    "start": 19.35,
    "end": 24.73,
    "mouth": []
@@ -76,7 +78,7 @@ window.TIMING = {
    "text": "So what's different?",
    "card": null,
    "react": {
-    "doli": "serious"
+    "doli": "search"
    },
    "start": 25.04,
    "end": 26.64,
@@ -102,7 +104,7 @@ window.TIMING = {
    "text": "So how much do I keep?",
    "card": null,
    "react": {
-    "doli": "ok"
+    "doli": "sweat"
    },
    "start": 34.55,
    "end": 36.86,

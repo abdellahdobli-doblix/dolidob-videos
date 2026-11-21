@@ -22,14 +22,14 @@
       "speaker": "doli",
       "text": "Nice! Same salary, but you won't take home the same amount.",
       "react": {
-        "dob": "think"
+        "dob": "shrug2"
       }
     },
     {
       "speaker": "dob",
       "text": "Wait, really? Why not?",
       "react": {
-        "doli": "wink"
+        "doli": "point"
       }
     },
     {
@@ -51,13 +51,16 @@
         "label": "Social Security + Medicare",
         "value": "-$5,738",
         "color": "violet"
+      },
+      "react": {
+        "dob": "idea"
       }
     },
     {
       "speaker": "dob",
       "text": "So what's different?",
       "react": {
-        "doli": "serious"
+        "doli": "search"
       }
     },
     {
@@ -76,7 +79,7 @@
       "speaker": "dob",
       "text": "So how much do I keep?",
       "react": {
-        "doli": "ok"
+        "doli": "sweat"
       }
     },
     {
@@ -112,7 +115,7 @@
     }
   ],
   "end": {
-    "dob": "wave",
-    "doli": "wink"
+    "dob": "celebrate",
+    "doli": "stars"
   }
 }
