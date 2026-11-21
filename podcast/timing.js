@@ -3,8 +3,8 @@ window.TIMING = {
  "title": "Texas vs California on $75,000 (2026)",
  "lines": [
   {
-   "speaker": "bob",
-   "text": "Dolly, I got two job offers. Same pay, seventy-five thousand dollars. One in Texas, one in California.",
+   "speaker": "dob",
+   "text": "Doli, I got two job offers. Same pay, seventy-five thousand dollars. One in Texas, one in California.",
    "card": {
     "label": "Salary",
     "value": "$75,000",
@@ -14,21 +14,21 @@ window.TIMING = {
    "end": 6.94
   },
   {
-   "speaker": "dolly",
+   "speaker": "doli",
    "text": "Nice! Same salary, but you won't take home the same amount.",
    "card": null,
    "start": 7.24,
    "end": 11.47
   },
   {
-   "speaker": "bob",
+   "speaker": "dob",
    "text": "Wait, really? Why not?",
    "card": null,
    "start": 11.77,
    "end": 13.37
   },
   {
-   "speaker": "dolly",
+   "speaker": "doli",
    "text": "Federal tax is the same in both: about seven thousand six hundred seventy dollars.",
    "card": {
     "label": "Federal income tax",
@@ -39,7 +39,7 @@ window.TIMING = {
    "end": 19.05
   },
   {
-   "speaker": "dolly",
+   "speaker": "doli",
    "text": "Social Security and Medicare are the same too: about five thousand seven hundred dollars.",
    "card": {
     "label": "Social Security + Medicare",
@@ -50,14 +50,14 @@ window.TIMING = {
    "end": 24.73
   },
   {
-   "speaker": "bob",
+   "speaker": "dob",
    "text": "So what's different?",
    "card": null,
    "start": 25.04,
    "end": 26.64
   },
   {
-   "speaker": "dolly",
+   "speaker": "doli",
    "text": "The state. Texas has no income tax on wages. California takes about four thousand dollars, with state disability insurance.",
    "card": {
     "label": "California tax + SDI",
@@ -68,14 +68,14 @@ window.TIMING = {
    "end": 34.25
   },
   {
-   "speaker": "bob",
+   "speaker": "dob",
    "text": "So how much do I keep?",
    "card": null,
    "start": 34.55,
    "end": 36.86
   },
   {
-   "speaker": "dolly",
+   "speaker": "doli",
    "text": "In Texas, about sixty-one thousand six hundred a year. In California, about fifty-seven thousand six hundred.",
    "card": {
     "label": "Take-home: Texas vs California",
@@ -86,14 +86,14 @@ window.TIMING = {
    "end": 43.3
   },
   {
-   "speaker": "bob",
+   "speaker": "dob",
    "text": "That's four thousand dollars a year, just for the state!",
    "card": null,
    "start": 43.61,
    "end": 47.46
   },
   {
-   "speaker": "dolly",
+   "speaker": "doli",
    "text": "Check your own state and salary free at dolidob dot com. Estimates only, not tax advice.",
    "card": {
     "label": "Try it free",
