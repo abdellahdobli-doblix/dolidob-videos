@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>dolidob podcast short</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=IBM+Plex+Sans:wght@500;600;700&display=block" rel="stylesheet" />
+    <script src="timing.js"></script>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      :root {
+        --night: #0b1430; --card: #16224f; --gold: #fcd34d; --mint: #6ee7b7; --sky: #93c5fd; --pink: #f9a8d4; --violet: #c4b5fd; --ink: #0b1430;
+        --display: "Bricolage Grotesque", "IBM Plex Sans", sans-serif; --body: "IBM Plex Sans", sans-serif;
+      }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--night); color: #fff; font-family: var(--body); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: radial-gradient(900px 700px at 85% 8%, #1d3a8a55, transparent 70%), radial-gradient(800px 700px at 10% 95%, #fcd34d22, transparent 70%), var(--night); }
+      /* Platform safe zone: keep content between y=270 and y=1470, x=80 to x=940 */
+      .safe { position: absolute; left: 80px; top: 270px; width: 860px; height: 1200px; }
+      .abs { position: absolute; }
+      .head { left: 0; top: 0; width: 860px; text-align: center; }
+      .kicker { font-weight: 700; font-size: 30px; letter-spacing: 4px; text-transform: uppercase; color: var(--sky); }
+      .title { font-family: var(--display); font-weight: 800; font-size: 64px; line-height: 1.05; margin-top: 10px; }
+      .onair { display: inline-block; margin-top: 14px; padding: 6px 18px; border-radius: 999px; background: #ff5a5a; color: #fff; font-weight: 700; font-size: 24px; letter-spacing: 2px; }
+      .card { position: absolute; left: 0; top: 250px; width: 860px; height: 290px; border-radius: 34px; background: var(--card); padding: 40px 48px; opacity: 0; text-align: center; }
+      .card .l { font-size: 38px; font-weight: 600; color: #c9d6f5; }
+      .card .v { font-family: var(--display); font-weight: 800; font-size: 108px; line-height: 1.1; margin-top: 18px; }
+      .card .v.long { font-size: 76px; margin-top: 34px; }
+      .sky { color: var(--sky); } .violet { color: var(--violet); } .pink { color: var(--pink); } .gold { color: var(--gold); } .mint { color: var(--mint); }
+      .desk { position: absolute; left: -80px; top: 900px; width: 1080px; height: 30px; background: #1d2f66; border-radius: 8px; }
+      .who { position: absolute; top: 560px; width: 400px; height: 360px; transform-origin: 50% 100%; }
+      .who svg { width: 400px; height: 360px; display: block; }
+      .tag { position: absolute; top: 925px; width: 400px; text-align: center; font-family: var(--display); font-weight: 800; font-size: 40px; }
+      .mic { position: absolute; top: 790px; width: 26px; height: 120px; }
+      .sub { position: absolute; left: 0; top: 990px; width: 860px; min-height: 190px; padding: 26px 34px; border-radius: 28px; background: #ffffff12; border: 2px solid #ffffff22;
+        font-size: 42px; font-weight: 600; line-height: 1.28; text-align: center; opacity: 0; }
+      .sub b { font-family: var(--display); font-weight: 800; font-size: 32px; letter-spacing: 2px; display: block; margin-bottom: 6px; }
+      .foot { position: absolute; left: 0; top: 1170px; width: 860px; text-align: center; font-size: 24px; font-weight: 500; color: #8fa4d8; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="55.6" data-width="1080" data-height="1920">
+      <audio id="voice" src="assets/voice.mp3" data-start="0" data-duration="55.6" data-volume="1"></audio>
+      <div class="safe">
+        <div class="abs head">
+          <div class="kicker">The Dolidob Paycheck Podcast</div>
+          <div class="title" id="title">Texas vs California on $75,000</div>
+          <div class="onair">● ON AIR</div>
+        </div>
+        <div id="cards"></div>
+
+        <!-- Bob: a worker holding his paycheck (original character) -->
+        <div class="who" id="bob" style="left:-10px">
+          <svg viewBox="0 0 400 360">
+            <rect x="110" y="250" width="180" height="120" rx="40" fill="#3b82f6" />
+            <path d="M190 250 L200 300 L210 250 Z" fill="#fcd34d" />
+            <circle cx="200" cy="160" r="92" fill="#f2c9a0" />
+            <path d="M112 140 Q120 60 200 62 Q285 60 290 140 Q270 100 200 104 Q135 100 112 140 Z" fill="#5b3a1e" />
+            <circle cx="168" cy="160" r="14" fill="#fff" /><circle cx="232" cy="160" r="14" fill="#fff" />
+            <circle cx="170" cy="163" r="7" fill="#0b1430" /><circle cx="234" cy="163" r="7" fill="#0b1430" />
+            <circle cx="150" cy="198" r="10" fill="#f59e9e" opacity="0.6" /><circle cx="250" cy="198" r="10" fill="#f59e9e" opacity="0.6" />
+            <ellipse class="mouth" id="bobMouth" cx="200" cy="212" rx="22" ry="14" fill="#7a2e2e" />
+            <rect x="282" y="232" width="98" height="64" rx="8" fill="#e8f5e9" stroke="#16a34a" stroke-width="4" transform="rotate(-12 330 264)" />
+            <text x="330" y="272" text-anchor="middle" font-family="IBM Plex Sans" font-weight="700" font-size="30" fill="#16a34a" transform="rotate(-12 330 264)">$$$</text>
+          </svg>
+        </div>
+        <div class="tag" style="left:-10px; color:#93c5fd">Bob</div>
+
+        <!-- Dolly: a friendly gold coin, the tax expert (original character) -->
+        <div class="who" id="dolly" style="left:470px">
+          <svg viewBox="0 0 400 360">
+            <circle cx="200" cy="190" r="150" fill="#d4a017" />
+            <circle cx="200" cy="190" r="132" fill="#fcd34d" />
+            <circle cx="200" cy="190" r="118" fill="none" stroke="#e7b416" stroke-width="6" stroke-dasharray="10 12" />
+            <path d="M120 70 Q170 30 230 52" fill="none" stroke="#fff6cc" stroke-width="10" stroke-linecap="round" opacity="0.8" />
+            <circle cx="160" cy="170" r="17" fill="#fff" /><circle cx="240" cy="170" r="17" fill="#fff" />
+            <circle cx="163" cy="174" r="9" fill="#0b1430" /><circle cx="243" cy="174" r="9" fill="#0b1430" />
+            <path d="M140 140 Q160 128 180 140" fill="none" stroke="#7a5200" stroke-width="6" stroke-linecap="round" />
+            <path d="M220 140 Q240 128 260 140" fill="none" stroke="#7a5200" stroke-width="6" stroke-linecap="round" />
+            <circle cx="135" cy="212" r="13" fill="#f59e0b" opacity="0.55" /><circle cx="265" cy="212" r="13" fill="#f59e0b" opacity="0.55" />
+            <ellipse class="mouth" id="dollyMouth" cx="200" cy="232" rx="28" ry="18" fill="#7a2e2e" />
+          </svg>
+        </div>
+        <div class="tag" style="left:460px; color:#fcd34d">Dolly</div>
+
+        <div class="desk"></div>
+        <div id="subs"></div>
+        <div class="foot">Estimates only, not tax advice. 2026 rules. dolidob.com</div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const T = window.TIMING || { total: 45, lines: [] };
+      const q = (s) => document.querySelector(s);
+      if (T.title) q("#title").textContent = T.title.replace(/ \(2026\)$/, "");
+      const tl = gsap.timeline({ paused: true });
+      const name = { bob: "Bob", dolly: "Dolly" };
+      const color = { bob: "#93c5fd", dolly: "#fcd34d" };
+
+      // One subtitle per line, shown from its start until the next line starts.
+      T.lines.forEach((l, i) => {
+        const el = document.createElement("div");
+        el.className = "sub";
+        el.innerHTML = `<b style="color:${color[l.speaker]}">${name[l.speaker]}</b>${l.text.replace(/&/g, "&amp;").replace(/</g, "&lt;")}`;
+        q("#subs").appendChild(el);
+        const until = i + 1 < T.lines.length ? T.lines[i + 1].start : T.total;
+        tl.set(el, { opacity: 0 }, 0);
+        tl.fromTo(el, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.2 }, l.start);
+        tl.set(el, { opacity: 0 }, until);
+      });
+
+      // Number cards stay up until the next card.
+      const withCard = T.lines.filter((l) => l.card);
+      withCard.forEach((l, i) => {
+        const el = document.createElement("div");
+        el.className = "card";
+        const long = l.card.value.length > 9 ? " long" : "";
+        el.innerHTML = `<div class="l">${l.card.label}</div><div class="v ${l.card.color}${long}">${l.card.value}</div>`;
+        q("#cards").appendChild(el);
+        const until = i + 1 < withCard.length ? withCard[i + 1].start : T.total;
+        tl.set(el, { opacity: 0 }, 0);
+        tl.fromTo(el, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.8)" }, l.start);
+        tl.set(el, { opacity: 0 }, until);
+      });
+
+      // Speaker: the one talking bounces and lights up; the mouth opens and closes while speaking.
+      tl.set(["#bobMouth", "#dollyMouth"], { scaleY: 0.25, transformOrigin: "50% 50%" }, 0);
+      tl.set(["#bob", "#dolly"], { opacity: 0.55 }, 0);
+      T.lines.forEach((l) => {
+        const who = `#${l.speaker}`;
+        const other = l.speaker === "bob" ? "#dolly" : "#bob";
+        const dur = Math.max(0.2, l.end - l.start);
+        tl.to(who, { opacity: 1, duration: 0.15 }, l.start);
+        tl.to(other, { opacity: 0.55, duration: 0.15 }, l.start);
+        tl.fromTo(who, { y: 0 }, { y: -18, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.out" }, l.start);
+        const flaps = Math.max(1, Math.floor(dur / 0.13));
+        tl.fromTo(`${who}Mouth`, { scaleY: 0.25 }, { scaleY: 1, duration: 0.13, repeat: flaps - 1, yoyo: true, ease: "none" }, l.start);
+        tl.set(`${who}Mouth`, { scaleY: 0.25 }, l.end);
+      });
+      tl.to("#root", { opacity: 1, duration: 0.01 }, Math.max(0, T.total - 0.01));
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
