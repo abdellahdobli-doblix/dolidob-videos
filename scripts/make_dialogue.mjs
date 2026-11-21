@@ -56,28 +56,43 @@ function mouthFrom(file) {
   return out.map(([a, b]) => [Math.round(a * 100) / 100, Math.round(b * 100) / 100]);
 }
 
-const clips = [];
-for (let i = 0; i < script.lines.length; i++) {
-  const line = script.lines[i];
-  const file = `tmp/line${i}.mp3`;
-  let ok = false;
-  if (key) {
-    const voice = script.voices[line.speaker];
-    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
+// Voice: Kokoro (free, open model, runs in the workflow) by default. Set TTS_PROVIDER=elevenlabs to use
+// ElevenLabs first; any line it cannot speak (no key, quota used up) falls back to Kokoro.
+const provider = process.env.TTS_PROVIDER || "kokoro";
+const kokoroVoices = script.kokoroVoices || { doli: "af_heart", dob: "am_michael" };
+const files = script.lines.map(() => null);
+if (provider === "elevenlabs" && key) {
+  for (let i = 0; i < script.lines.length; i++) {
+    const line = script.lines[i];
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${script.voices[line.speaker]}?output_format=mp3_44100_128`, {
       method: "POST",
       headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
       body: JSON.stringify({ text: line.text, model_id: model, voice_settings: { stability: 0.55, similarity_boost: 0.75, style: 0.3 } }),
     });
     if (res.ok) {
-      writeFileSync(file, Buffer.from(await res.arrayBuffer()));
-      ok = true;
+      files[i] = `tmp/line${i}.mp3`;
+      writeFileSync(files[i], Buffer.from(await res.arrayBuffer()));
     } else {
-      console.error(`ElevenLabs error ${res.status} on line ${i}: ${(await res.text()).slice(0, 300)}`);
+      console.error(`ElevenLabs error ${res.status} on line ${i}: ${(await res.text()).slice(0, 200)}`);
     }
   }
-  const dur = ok ? probe(file) : Math.max(1.6, line.text.split(/\s+/).length / 2.6);
-  clips.push({ ...line, file: ok ? file : null, dur, mouth: ok ? mouthFrom(file) : [] });
 }
+const missing = script.lines.map((l, i) => (files[i] ? null : { text: l.text, voice: kokoroVoices[l.speaker], out: `tmp/line${i}.wav`, i })).filter(Boolean);
+if (missing.length) {
+  try {
+    writeFileSync("tmp/kokoro.json", JSON.stringify(missing));
+    execFileSync("python3", ["../scripts/tts_kokoro.py", "tmp/kokoro.json"], { stdio: "inherit" });
+    missing.forEach((m) => { if (existsSync(m.out)) files[m.i] = m.out; });
+  } catch (e) {
+    console.error(`Kokoro failed: ${e.message}. Lines without a voice will be silent.`);
+  }
+}
+
+const clips = script.lines.map((line, i) => {
+  const file = files[i];
+  const dur = file ? probe(file) : Math.max(1.6, line.text.split(/\s+/).length / 2.6);
+  return { ...line, file, dur, mouth: file ? mouthFrom(file) : [] };
+});
 
 let t = LEAD;
 const lines = clips.map((c) => {

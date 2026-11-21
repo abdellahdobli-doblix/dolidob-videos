@@ -4,6 +4,10 @@
     "doli": "cgSgspJ2msm6clMCkdW9",
     "dob": "bIHbv24MWmeRgasZH58o"
   },
+  "kokoroVoices": {
+    "doli": "af_heart",
+    "dob": "am_michael"
+  },
   "source": "Figures from https://dolidob.com/data/take-home-2026.json (single filer, paid every two weeks, no 401(k)).",
   "lines": [
     {
