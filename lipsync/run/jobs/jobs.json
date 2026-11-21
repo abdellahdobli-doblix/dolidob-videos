@@ -1,0 +1,101 @@
+[
+ {
+  "name": "line0",
+  "scene": 1,
+  "at": 0.4,
+  "x": 0,
+  "w": 224,
+  "h": 380,
+  "speaker": "dob"
+ },
+ {
+  "name": "line1",
+  "scene": 2,
+  "at": 0.0,
+  "x": 176,
+  "w": 224,
+  "h": 386,
+  "speaker": "doli"
+ },
+ {
+  "name": "line2",
+  "scene": 2,
+  "at": 4.27,
+  "x": 0,
+  "w": 224,
+  "h": 386,
+  "speaker": "dob"
+ },
+ {
+  "name": "line3",
+  "scene": 3,
+  "at": 0.0,
+  "x": 176,
+  "w": 224,
+  "h": 410,
+  "speaker": "doli"
+ },
+ {
+  "name": "line4",
+  "scene": 4,
+  "at": 0.0,
+  "x": 176,
+  "w": 224,
+  "h": 380,
+  "speaker": "doli"
+ },
+ {
+  "name": "line5",
+  "scene": 5,
+  "at": 0.0,
+  "x": 0,
+  "w": 224,
+  "h": 380,
+  "speaker": "dob"
+ },
+ {
+  "name": "line6",
+  "scene": 5,
+  "at": 1.8,
+  "x": 176,
+  "w": 224,
+  "h": 380,
+  "speaker": "doli"
+ },
+ {
+  "name": "line7",
+  "scene": 6,
+  "at": 0.0,
+  "x": 0,
+  "w": 224,
+  "h": 384,
+  "speaker": "dob"
+ },
+ {
+  "name": "line8",
+  "scene": 6,
+  "at": 2.19,
+  "x": 176,
+  "w": 224,
+  "h": 384,
+  "speaker": "doli"
+ },
+ {
+  "name": "line9",
+  "scene": 7,
+  "at": 0.0,
+  "x": 0,
+  "w": 214,
+  "h": 338,
+  "speaker": "dob"
+ },
+ {
+  "name": "line10",
+  "scene": 8,
+  "at": 0.0,
+  "x": 176,
+  "w": 224,
+  "h": 390,
+  "speaker": "doli"
+ }
+]
