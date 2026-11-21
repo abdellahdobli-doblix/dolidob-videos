@@ -19,6 +19,43 @@ mkdirSync("tmp", { recursive: true });
 
 const probe = (file) => Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString().trim());
 
+// Lip sync: when the voice is loud enough the mouth is open. Returns [open, close] pairs in seconds
+// from the start of the clip, measured on 40 ms windows of the actual speech.
+function mouthFrom(file) {
+  const pcm = execFileSync("ffmpeg", ["-v", "error", "-i", file, "-ac", "1", "-ar", "16000", "-f", "s16le", "-"], { maxBuffer: 64 * 1024 * 1024 });
+  const samples = new Int16Array(pcm.buffer, pcm.byteOffset, Math.floor(pcm.length / 2));
+  const win = 640; // 40 ms at 16 kHz
+  const rms = [];
+  for (let i = 0; i + win <= samples.length; i += win) {
+    let sum = 0;
+    for (let j = i; j < i + win; j++) sum += samples[j] * samples[j];
+    rms.push(Math.sqrt(sum / win));
+  }
+  const peak = Math.max(1, ...rms);
+  const on = rms.map((v, i) => {
+    // open on loud windows, but close briefly on the dips between syllables
+    const prev = rms[i - 1] ?? 0;
+    return v > peak * 0.18 && !(v < prev * 0.6 && v < peak * 0.35);
+  });
+  const segs = [];
+  for (let i = 0; i < on.length; i++) {
+    if (!on[i]) continue;
+    let j = i;
+    while (j + 1 < on.length && on[j + 1]) j++;
+    segs.push([i * 0.04, (j + 1) * 0.04]);
+    i = j;
+  }
+  // keep each open or closed state on screen for at least ~2 frames
+  const out = [];
+  for (const s of segs) {
+    if (s[1] - s[0] < 0.07) s[1] = s[0] + 0.07;
+    const last = out[out.length - 1];
+    if (last && s[0] - last[1] < 0.06) last[1] = Math.max(last[1], s[1]);
+    else out.push(s);
+  }
+  return out.map(([a, b]) => [Math.round(a * 100) / 100, Math.round(b * 100) / 100]);
+}
+
 const clips = [];
 for (let i = 0; i < script.lines.length; i++) {
   const line = script.lines[i];
@@ -39,14 +76,14 @@ for (let i = 0; i < script.lines.length; i++) {
     }
   }
   const dur = ok ? probe(file) : Math.max(1.6, line.text.split(/\s+/).length / 2.6);
-  clips.push({ ...line, file: ok ? file : null, dur });
+  clips.push({ ...line, file: ok ? file : null, dur, mouth: ok ? mouthFrom(file) : [] });
 }
 
 let t = LEAD;
 const lines = clips.map((c) => {
   const start = Math.round(t * 100) / 100;
   t += c.dur + GAP;
-  return { speaker: c.speaker, text: c.text, card: c.card || null, start, end: Math.round((start + c.dur) * 100) / 100, file: c.file };
+  return { speaker: c.speaker, text: c.text, card: c.card || null, start, end: Math.round((start + c.dur) * 100) / 100, mouth: c.mouth.map(([a, b]) => [Math.round((start + a) * 100) / 100, Math.round((start + b) * 100) / 100]), file: c.file };
 });
 const total = Math.ceil((t - GAP + TAIL) * 10) / 10;
 

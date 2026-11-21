@@ -11,21 +11,24 @@ window.TIMING = {
     "color": "sky"
    },
    "start": 0.4,
-   "end": 6.94
+   "end": 6.94,
+   "mouth": []
   },
   {
    "speaker": "doli",
    "text": "Nice! Same salary, but you won't take home the same amount.",
    "card": null,
    "start": 7.24,
-   "end": 11.47
+   "end": 11.47,
+   "mouth": []
   },
   {
    "speaker": "dob",
    "text": "Wait, really? Why not?",
    "card": null,
    "start": 11.77,
-   "end": 13.37
+   "end": 13.37,
+   "mouth": []
   },
   {
    "speaker": "doli",
@@ -36,7 +39,8 @@ window.TIMING = {
     "color": "sky"
    },
    "start": 13.67,
-   "end": 19.05
+   "end": 19.05,
+   "mouth": []
   },
   {
    "speaker": "doli",
@@ -47,14 +51,16 @@ window.TIMING = {
     "color": "violet"
    },
    "start": 19.35,
-   "end": 24.73
+   "end": 24.73,
+   "mouth": []
   },
   {
    "speaker": "dob",
    "text": "So what's different?",
    "card": null,
    "start": 25.04,
-   "end": 26.64
+   "end": 26.64,
+   "mouth": []
   },
   {
    "speaker": "doli",
@@ -65,14 +71,16 @@ window.TIMING = {
     "color": "pink"
    },
    "start": 26.94,
-   "end": 34.25
+   "end": 34.25,
+   "mouth": []
   },
   {
    "speaker": "dob",
    "text": "So how much do I keep?",
    "card": null,
    "start": 34.55,
-   "end": 36.86
+   "end": 36.86,
+   "mouth": []
   },
   {
    "speaker": "doli",
@@ -83,14 +91,16 @@ window.TIMING = {
     "color": "gold"
    },
    "start": 37.15,
-   "end": 43.3
+   "end": 43.3,
+   "mouth": []
   },
   {
    "speaker": "dob",
    "text": "That's four thousand dollars a year, just for the state!",
    "card": null,
    "start": 43.61,
-   "end": 47.46
+   "end": 47.46,
+   "mouth": []
   },
   {
    "speaker": "doli",
@@ -101,7 +111,8 @@ window.TIMING = {
     "color": "gold"
    },
    "start": 47.75,
-   "end": 53.9
+   "end": 53.9,
+   "mouth": []
   }
  ]
 };
