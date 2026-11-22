@@ -13,7 +13,7 @@ import os
 import subprocess
 import sys
 
-RUN = "../lipsync/run"
+RUN = os.environ.get("LIPSYNC_RUN", "../lipsync/run")
 FPS = 25
 SCALE = 2  # the speaker crop is upscaled so the face is big enough for the model
 SIDE = {"dob": (0.0, 0.56), "doli": (0.44, 1.0)}  # Dob sits on the left, Doli on the right
