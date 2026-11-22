@@ -1,12 +1,17 @@
 name: Podcast episode (lip-synced)
 
 # One full episode, no manual steps: dialogue from dolidob.com's open data, Gemini voices, LatentSync lip sync
-# on a free Kaggle GPU, the 8 animated scenes in podcast/scenes, then the video is sent to Telegram for review.
-# Started by n8n (or by hand). Secrets: GEMINI_API_KEY, KAGGLE_API_TOKEN, TELEGRAM_BOT_TOKEN.
+# on a free Kaggle GPU and the 8 animated scenes in podcast/scenes. Started by n8n ("dolidob - Podcast Episodes"),
+# which downloads the artifact, asks for approval on Telegram and uploads to YouTube as private.
+# Secrets: GEMINI_API_KEY, KAGGLE_API_TOKEN.
 
 on:
   workflow_dispatch:
     inputs:
+      run_label:
+        description: "Label so the caller can find this run"
+        required: true
+        type: string
       state_a:
         description: "First state, e.g. Texas"
         required: true
@@ -20,7 +25,7 @@ on:
         required: true
         type: string
 
-run-name: "episode ${{ inputs.state_a }} vs ${{ inputs.state_b }} ${{ inputs.salary }}"
+run-name: "episode ${{ inputs.run_label }}"
 
 permissions:
   contents: write
@@ -132,12 +137,3 @@ jobs:
           name: episode
           path: podcast/out/video.mp4
           retention-days: 7
-
-      - name: Send to Telegram for review
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: |
-          TITLE=$(python -c "import json; print(json.load(open('podcast/script.json'))['title'].replace(' (2026)', ''))")
-          curl -sf -F chat_id="$TELEGRAM_CHAT_ID" -F video=@podcast/out/video.mp4 -F supports_streaming=true \
-            -F caption="🎙️ New Dolidob episode ready for review: $TITLE. Check it, then upload it to YouTube Shorts yourself." \
-            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVideo" > /dev/null && echo "sent to Telegram"
