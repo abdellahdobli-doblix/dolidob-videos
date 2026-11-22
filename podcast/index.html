@@ -12,88 +12,90 @@
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
       :root {
-        --night: #0b1430; --card: #16224f; --gold: #fcd34d; --mint: #6ee7b7; --sky: #93c5fd; --pink: #f9a8d4; --violet: #c4b5fd; --ink: #0b1430;
+        --night: #0b1430; --gold: #fcd34d; --mint: #6ee7b7; --sky: #93c5fd; --pink: #f9a8d4; --violet: #c4b5fd;
         --display: "Bricolage Grotesque", "IBM Plex Sans", sans-serif; --body: "IBM Plex Sans", sans-serif;
       }
       html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--night); color: #fff; font-family: var(--body); }
       #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
         background:
-          linear-gradient(180deg, transparent 0 46%, #0f1d47 46% 47%, transparent 47%),
-          radial-gradient(700px 500px at 50% 40%, #2563eb33, transparent 70%),
-          radial-gradient(900px 700px at 85% 8%, #1d3a8a55, transparent 70%),
-          radial-gradient(800px 700px at 10% 95%, #fcd34d22, transparent 70%), var(--night); }
-      .grid { position: absolute; inset: 0; opacity: 0.18;
+          radial-gradient(760px 560px at 50% 52%, #2563eb40, transparent 70%),
+          radial-gradient(900px 700px at 85% 6%, #1d3a8a55, transparent 70%),
+          radial-gradient(800px 700px at 12% 96%, #fcd34d1f, transparent 70%), var(--night); }
+      .grid { position: absolute; inset: 0; opacity: 0.16;
         background-image: linear-gradient(#93c5fd22 1px, transparent 1px), linear-gradient(90deg, #93c5fd22 1px, transparent 1px); background-size: 60px 60px; }
-      /* Platform safe zone: keep content between y=270 and y=1470, x=80 to x=940 */
-      .safe { position: absolute; left: 80px; top: 270px; width: 860px; height: 1200px; }
       .abs { position: absolute; }
-      .head { left: 0; top: 0; width: 860px; text-align: center; }
-      .kicker { font-weight: 700; font-size: 28px; letter-spacing: 4px; text-transform: uppercase; color: var(--sky); }
-      .title { font-family: var(--display); font-weight: 800; font-size: 58px; line-height: 1.05; margin-top: 8px; }
-      .onair { display: inline-block; margin-top: 12px; padding: 5px 18px; border-radius: 999px; background: #ff5a5a; color: #fff; font-weight: 700; font-size: 22px; letter-spacing: 2px; }
-      .card { position: absolute; left: 60px; top: 215px; width: 740px; height: 230px; border-radius: 30px; background: #16224fee; border: 2px solid #ffffff1f; padding: 30px 40px; opacity: 0; text-align: center; }
+      .center { left: 0; width: 1080px; text-align: center; }
+      .kicker { top: 230px; font-weight: 700; font-size: 30px; letter-spacing: 4px; text-transform: uppercase; color: var(--sky); }
+      .title { top: 278px; padding: 0 90px; font-family: var(--display); font-weight: 800; font-size: 62px; line-height: 1.05; }
+      .onair { top: 175px; left: 465px; width: 150px; padding: 6px 0; border-radius: 999px; background: #ff5a5a; color: #fff; font-weight: 700; font-size: 22px; letter-spacing: 2px; text-align: center; }
+      .card { position: absolute; left: 150px; top: 420px; width: 780px; height: 210px; z-index: 3; border-radius: 32px; background: #16224fee; border: 2px solid #ffffff22; padding: 28px 40px; opacity: 0; text-align: center; }
       .card .l { font-size: 34px; font-weight: 600; color: #c9d6f5; }
-      .card .v { font-family: var(--display); font-weight: 800; font-size: 96px; line-height: 1.1; margin-top: 12px; }
-      .card .v.long { font-size: 66px; margin-top: 28px; }
+      .card .v { font-family: var(--display); font-weight: 800; font-size: 100px; line-height: 1.1; margin-top: 12px; }
+      .card .v.long { font-size: 68px; margin-top: 26px; }
       .sky { color: var(--sky); } .violet { color: var(--violet); } .pink { color: var(--pink); } .gold { color: var(--gold); } .mint { color: var(--mint); }
-      .who { position: absolute; top: 470px; height: 380px; transform-origin: 50% 100%; }
-      .who img { position: absolute; left: 0; top: 0; height: 380px; width: auto; }
-      .who .open { opacity: 0; }
-      .desk { position: absolute; left: -80px; top: 846px; width: 1080px; height: 34px; border-radius: 6px;
-        background: linear-gradient(180deg, #2b3f7a, #16224f); box-shadow: 0 -2px 0 #4f6ab5 inset, 0 12px 30px #0008; }
-      .tag { position: absolute; top: 888px; text-align: center; font-family: var(--display); font-weight: 800; font-size: 40px; }
-      .sub { position: absolute; left: 0; top: 950px; width: 860px; height: 196px; padding: 18px 30px; border-radius: 26px; background: #0b1430d9; border: 2px solid #ffffff22;
+      .who { position: absolute; top: 640px; width: 447px; height: 800px; transform-origin: 50% 100%; }
+      .who img { position: absolute; left: 0; top: 0; width: 447px; height: 800px; }
+      .who .open, .who .pose { opacity: 0; }
+      .floor { position: absolute; left: 0; top: 1380px; width: 1080px; height: 120px; background: radial-gradient(520px 60px at 50% 40%, #00000066, transparent 70%); }
+            .tag { position: absolute; top: 1395px; font-size: 34px !important; text-align: center; font-family: var(--display); font-weight: 800; font-size: 44px; }
+      .sub { position: absolute; left: 70px; top: 1450px; width: 940px; height: 210px; z-index: 4; padding: 20px 36px; border-radius: 28px; background: #0b1430e6; border: 2px solid #ffffff26;
         display: flex; flex-direction: column; justify-content: center; text-align: center; font-weight: 600; line-height: 1.24; opacity: 0; }
-      .sub b { font-family: var(--display); font-weight: 800; font-size: 28px; letter-spacing: 2px; display: block; margin-bottom: 4px; }
-      .foot { position: absolute; left: 0; top: 1166px; width: 860px; text-align: center; font-size: 22px; font-weight: 500; color: #8fa4d8; }
+      .sub b { font-family: var(--display); font-weight: 800; font-size: 30px; letter-spacing: 2px; display: block; margin-bottom: 6px; }
+      .foot { top: 1680px; font-size: 24px; font-weight: 500; color: #8fa4d8; }
+      .brand { top: 1730px; left: 340px; width: 400px; padding: 14px 0; border-radius: 999px; background: var(--gold); color: var(--night); font-family: var(--display); font-weight: 800; font-size: 44px; text-align: center; }
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="55.6" data-width="1080" data-height="1920">
       <audio id="voice" src="assets/voice.mp3" data-start="0" data-duration="55.6" data-volume="1"></audio>
       <div class="grid"></div>
-      <div class="safe">
-        <div class="abs head">
-          <div class="kicker">The Dolidob Paycheck Podcast</div>
-          <div class="title" id="title">Texas vs California on $75,000</div>
-          <div class="onair">● ON AIR</div>
-        </div>
+      <div class="abs center kicker">The Dolidob Paycheck Podcast</div>
+      <div class="abs center title" id="title">Texas vs California on $75,000</div>
+      <div class="abs onair">● ON AIR</div>
 
-        <!-- Dob and Doli: characters made by the channel owner with Gemini, keyed from a green background -->
-        <div class="who" id="dob" style="left:-20px; width:357px">
-          <img class="closed" src="assets/dob-closed.png" alt="" />
-          <img class="open" id="dobOpen" src="assets/dob-open.png" alt="" />
-        </div>
-        <div class="who" id="doli" style="left:480px; width:381px">
-          <img class="closed" src="assets/doli-closed.png" alt="" />
-          <img class="open" id="doliOpen" src="assets/doli-open.png" alt="" />
-        </div>
-        <div class="desk"></div>
-        <div class="tag" style="left:-20px; width:357px; color:#93c5fd">Dob</div>
-        <div class="tag" style="left:480px; width:381px; color:#fcd34d">Doli</div>
+      <!-- Dob and Doli: full-body characters made by the channel owner with Gemini, keyed from a green
+           background. Every pose is the same 614x1100 frame, so poses line up without offsets. -->
+      <div class="floor"></div>
+      <div class="who" id="dob" style="left:40px"></div>
+      <div class="who" id="doli" style="left:593px"></div>
+      <div class="tag" style="left:40px; width:447px; color:#93c5fd">Dob</div>
+      <div class="tag" style="left:593px; width:447px; color:#fcd34d">Doli</div>
 
-        <div id="cards"></div>
-        <div id="subs"></div>
-        <div class="foot">Estimates only, not tax advice. 2026 rules. dolidob.com</div>
-      </div>
+      <div id="cards"></div>
+      <div id="subs"></div>
+      <div class="abs center foot">Estimates only, not tax advice. 2026 rules.</div>
+      <div class="abs brand">dolidob.com</div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const T = window.TIMING || { total: 45, lines: [] };
       const q = (s) => document.querySelector(s);
       if (T.title) q("#title").textContent = T.title.replace(/ \(2026\)$/, "");
+      // Gesture poses whose face matches the front pose: an open-mouth copy exists, so a character can
+      // keep this gesture while talking (line.talk) and the lip sync still works.
+      const TALK = { dob: ["armscrossed", "confused", "idea"], doli: ["pocket", "shrug", "idea"] };
+      const POSES = {
+        dob: ["armscrossed", "point", "idea", "stressed", "confused", "facepalm", "tax", "celebrate", "think"],
+        doli: ["pocket", "point", "idea", "shrug", "phone"],
+      };
+      Object.entries(POSES).forEach(([who, poses]) => {
+        const box = q(`#${who}`);
+        const add = (id, file, cls) => { const im = document.createElement("img"); im.id = id; im.className = cls; im.src = `assets/cast/${file}.png`; im.alt = ""; box.appendChild(im); };
+        add(`${who}Closed`, `${who}-closed`, "closed");
+        add(`${who}Open`, `${who}-open`, "open");
+        poses.forEach((p) => add(`${who}-${p}`, `${who}-${p}`, "pose"));
+        (TALK[who] || []).forEach((p) => add(`${who}-${p}-open`, `${who}-${p}-open`, "pose"));
+      });
       const tl = gsap.timeline({ paused: true });
       const name = { dob: "Dob", doli: "Doli" };
       const color = { dob: "#93c5fd", doli: "#fcd34d" };
-      // "swap": open/closed mouth images alternate while talking. "bounce": the pair is not aligned, so only move.
-      const talkMode = { dob: "swap", doli: "swap" };
       const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
       // One subtitle per line, shown from its start until the next line starts. Long lines get a smaller font.
       T.lines.forEach((l, i) => {
         const el = document.createElement("div");
         el.className = "sub";
-        const size = l.text.length > 120 ? 31 : l.text.length > 85 ? 35 : 40;
+        const size = l.text.length > 120 ? 34 : l.text.length > 85 ? 38 : 44;
         el.innerHTML = `<b style="color:${color[l.speaker]}">${name[l.speaker]}</b><span style="font-size:${size}px">${esc(l.text)}</span>`;
         q("#subs").appendChild(el);
         const until = i + 1 < T.lines.length ? T.lines[i + 1].start : T.total;
@@ -112,30 +114,61 @@
         q("#cards").appendChild(el);
         const until = i + 1 < withCard.length ? withCard[i + 1].start : T.total;
         tl.set(el, { opacity: 0 }, 0);
-        tl.fromTo(el, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.8)" }, l.start);
+        tl.fromTo(el, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.8)" }, l.start);
         tl.set(el, { opacity: 0 }, until);
       });
 
-      // The speaker lights up and talks; the other one dims slightly.
-      tl.set(["#dob", "#doli"], { opacity: 0.6, filter: "brightness(0.8)" }, 0);
+      // The speaker is fully visible and bounces once; the listener stays in full colour, only a little faded.
+      tl.set(["#dob", "#doli"], { opacity: 0.85 }, 0);
       tl.set(["#dobOpen", "#doliOpen"], { opacity: 0 }, 0);
       T.lines.forEach((l) => {
         const who = `#${l.speaker}`;
         const other = l.speaker === "dob" ? "#doli" : "#dob";
-        const dur = Math.max(0.2, l.end - l.start);
-        tl.to(who, { opacity: 1, filter: "brightness(1)", duration: 0.15 }, l.start);
-        tl.to(other, { opacity: 0.6, filter: "brightness(0.8)", duration: 0.15 }, l.start);
-        tl.fromTo(who, { y: 0 }, { y: -14, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.out" }, l.start);
-        if (talkMode[l.speaker] === "swap") {
-          // Mouth open/closed every 0.14 s, set step by step so seeking to any frame is exact.
-          for (let t = l.start, open = true; t < l.end - 0.07; t += 0.14, open = !open) tl.set(`${who}Open`, { opacity: open ? 1 : 0 }, t);
-          tl.set(`${who}Open`, { opacity: 0 }, l.end);
-        } else {
-          const beats = Math.max(1, Math.floor(dur / 0.36));
-          tl.fromTo(who, { scaleY: 1, rotation: 0 }, { scaleY: 1.025, rotation: 0.8, duration: 0.18, repeat: beats * 2 - 1, yoyo: true, ease: "sine.inOut" }, l.start + 0.36);
-          tl.set(who, { scaleY: 1, rotation: 0 }, l.end);
+        tl.to(who, { opacity: 1, duration: 0.15 }, l.start);
+        tl.to(other, { opacity: 0.85, duration: 0.15 }, l.start);
+        tl.fromTo(who, { y: 0 }, { y: -8, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.out" }, l.start);
+        // Lip sync: the mouth is open only while the voice is loud (measured from the audio in make_dialogue.mjs).
+        // With a talk gesture, the front pose is swapped for the gesture and its open-mouth copy.
+        const talk = l.talk && (TALK[l.speaker] || []).includes(l.talk) ? l.talk : null;
+        const shut = talk ? `${who}-${talk}` : `${who}Closed`;
+        const open = talk ? `${who}-${talk}-open` : `${who}Open`;
+        if (talk) {
+          tl.set([`${who}Closed`, `${who}Open`], { opacity: 0 }, l.start);
+          tl.set(shut, { opacity: 1 }, l.start);
+          tl.set([shut, open], { opacity: 0 }, l.end + 0.05);
+          tl.set(`${who}Closed`, { opacity: 1 }, l.end + 0.05);
         }
+        (l.mouth || []).forEach(([a, b]) => {
+          tl.set(open, { opacity: 1 }, a);
+          tl.set(open, { opacity: 0 }, b);
+        });
       });
+      // Reactions: while one speaks, the listener can switch to an expression image (react), and both get
+      // an end pose after the last line. The talking pair is hidden while a pose is shown.
+      const showPose = (who, pose, from, until) => {
+        const id = `#${who}-${pose}`;
+        if (!document.querySelector(id)) return;
+        tl.set([`#${who}Closed`, `#${who}Open`], { opacity: 0 }, from);
+        tl.fromTo(id, { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" }, from);
+        tl.set(id, { opacity: 0 }, until);
+        tl.set(`#${who}Closed`, { opacity: 1 }, until);
+      };
+      T.lines.forEach((l, i) => {
+        const until = i + 1 < T.lines.length ? T.lines[i + 1].start : T.total;
+        Object.entries(l.react || {}).forEach(([who, r]) => {
+          if (who === l.speaker) return;
+          const pose = typeof r === "string" ? r : r.pose;
+          // "at": the reaction lands when those words are spoken (position in the text, scaled to the clip)
+          const k = r.at ? Math.max(0, l.text.indexOf(r.at)) / l.text.length : 0;
+          const from = l.start + 0.15 + k * (l.end - l.start);
+          const isLast = i === T.lines.length - 1 && T.end && T.end[who];
+          showPose(who, pose, from, isLast ? l.end - 0.6 : until);
+        });
+      });
+      if (T.end && T.lines.length) {
+        const last = T.lines[T.lines.length - 1];
+        Object.entries(T.end).forEach(([who, pose]) => showPose(who, pose, who === last.speaker ? last.end + 0.1 : last.end - 0.6, T.total + 1));
+      }
       tl.to("#root", { opacity: 1, duration: 0.01 }, Math.max(0, T.total - 0.01));
       window.__timelines["main"] = tl;
     </script>

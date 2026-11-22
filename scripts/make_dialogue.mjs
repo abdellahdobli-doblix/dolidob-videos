@@ -11,7 +11,7 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync, copyFileSync } from
 const script = JSON.parse(readFileSync("script.json", "utf8"));
 const key = process.env.ELEVENLABS_API_KEY || "";
 const model = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
-const GAP = 0.3; // pause between lines, seconds
+const GAP = 0.22; // pause between lines, seconds
 const LEAD = 0.4; // silence before the first line
 const TAIL = 1.6; // hold after the last line
 mkdirSync("assets", { recursive: true });
@@ -19,34 +19,124 @@ mkdirSync("tmp", { recursive: true });
 
 const probe = (file) => Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString().trim());
 
-const clips = [];
-for (let i = 0; i < script.lines.length; i++) {
-  const line = script.lines[i];
-  const file = `tmp/line${i}.mp3`;
-  let ok = false;
-  if (key) {
-    const voice = script.voices[line.speaker];
-    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
+// Lip sync: when the voice is loud enough the mouth is open. Returns [open, close] pairs in seconds
+// from the start of the clip, measured on 40 ms windows of the actual speech.
+function mouthFrom(file) {
+  const pcm = execFileSync("ffmpeg", ["-v", "error", "-i", file, "-ac", "1", "-ar", "16000", "-f", "s16le", "-"], { maxBuffer: 64 * 1024 * 1024 });
+  const samples = new Int16Array(pcm.buffer, pcm.byteOffset, Math.floor(pcm.length / 2));
+  const win = 640; // 40 ms at 16 kHz
+  const rms = [];
+  for (let i = 0; i + win <= samples.length; i += win) {
+    let sum = 0;
+    for (let j = i; j < i + win; j++) sum += samples[j] * samples[j];
+    rms.push(Math.sqrt(sum / win));
+  }
+  const peak = Math.max(1, ...rms);
+  const on = rms.map((v, i) => {
+    // open on loud windows, but close briefly on the dips between syllables
+    const prev = rms[i - 1] ?? 0;
+    return v > peak * 0.18 && !(v < prev * 0.6 && v < peak * 0.35);
+  });
+  const segs = [];
+  for (let i = 0; i < on.length; i++) {
+    if (!on[i]) continue;
+    let j = i;
+    while (j + 1 < on.length && on[j + 1]) j++;
+    segs.push([i * 0.04, (j + 1) * 0.04]);
+    i = j;
+  }
+  // keep each open or closed state on screen for at least ~2 frames
+  const out = [];
+  for (const s of segs) {
+    if (s[1] - s[0] < 0.07) s[1] = s[0] + 0.07;
+    const last = out[out.length - 1];
+    if (last && s[0] - last[1] < 0.06) last[1] = Math.max(last[1], s[1]);
+    else out.push(s);
+  }
+  return out.map(([a, b]) => [Math.round(a * 100) / 100, Math.round(b * 100) / 100]);
+}
+
+// Voice: TTS_PROVIDER picks gemini, elevenlabs or kokoro (free, open model, runs in the workflow).
+// ElevenLabs first; any line it cannot speak (no key, quota used up) falls back to Kokoro.
+const provider = process.env.TTS_PROVIDER || "kokoro";
+const kokoroVoices = script.kokoroVoices || { doli: "af_heart", dob: "am_michael" };
+const files = script.lines.map(() => null);
+if (provider === "elevenlabs" && key) {
+  for (let i = 0; i < script.lines.length; i++) {
+    const line = script.lines[i];
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${script.voices[line.speaker]}?output_format=mp3_44100_128`, {
       method: "POST",
       headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },
       body: JSON.stringify({ text: line.text, model_id: model, voice_settings: { stability: 0.55, similarity_boost: 0.75, style: 0.3 } }),
     });
     if (res.ok) {
-      writeFileSync(file, Buffer.from(await res.arrayBuffer()));
-      ok = true;
+      files[i] = `tmp/line${i}.mp3`;
+      writeFileSync(files[i], Buffer.from(await res.arrayBuffer()));
     } else {
-      console.error(`ElevenLabs error ${res.status} on line ${i}: ${(await res.text()).slice(0, 300)}`);
+      console.error(`ElevenLabs error ${res.status} on line ${i}: ${(await res.text()).slice(0, 200)}`);
     }
   }
-  const dur = ok ? probe(file) : Math.max(1.6, line.text.split(/\s+/).length / 2.6);
-  clips.push({ ...line, file: ok ? file : null, dur });
 }
+// Gemini TTS (Google AI Studio free tier): one request per line so each line keeps its own timing and
+// lip sync. Returns raw 24 kHz 16-bit mono PCM, saved as WAV. Rate limits (429) are waited out.
+const gkey = process.env.GEMINI_API_KEY || "";
+const gmodel = process.env.GEMINI_TTS_MODEL || "gemini-2.5-flash-preview-tts";
+const geminiVoices = script.geminiVoices || { doli: "Aoede", dob: "Puck" };
+const wav = (pcm) => {
+  const h = Buffer.alloc(44);
+  h.write("RIFF", 0); h.writeUInt32LE(36 + pcm.length, 4); h.write("WAVEfmt ", 8); h.writeUInt32LE(16, 16);
+  h.writeUInt16LE(1, 20); h.writeUInt16LE(1, 22); h.writeUInt32LE(24000, 24); h.writeUInt32LE(48000, 28);
+  h.writeUInt16LE(2, 32); h.writeUInt16LE(16, 34); h.write("data", 36); h.writeUInt32LE(pcm.length, 40);
+  return Buffer.concat([h, pcm]);
+};
+if (provider === "gemini" && gkey) {
+  for (let i = 0; i < script.lines.length; i++) {
+    const line = script.lines[i];
+    const style = script.geminiStyle?.[line.speaker] || "Say in a friendly, natural podcast tone";
+    for (let attempt = 0; attempt < 4 && !files[i]; attempt++) {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${gmodel}:generateContent`, {
+        method: "POST",
+        headers: { "x-goog-api-key": gkey, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `${style}: ${line.text}` }] }],
+          generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: geminiVoices[line.speaker] } } } },
+        }),
+      });
+      if (res.ok) {
+        const data = (await res.json()).candidates?.[0]?.content?.parts?.find((p) => p.inlineData)?.inlineData?.data;
+        if (data) { files[i] = `tmp/line${i}.wav`; writeFileSync(files[i], wav(Buffer.from(data, "base64"))); }
+        else console.error(`Gemini returned no audio on line ${i}`);
+        break;
+      }
+      const body = (await res.text()).slice(0, 200);
+      console.error(`Gemini error ${res.status} on line ${i}: ${body}`);
+      if ((res.status !== 429 && res.status < 500) || /spending cap|per day|billing/i.test(body)) break; // not transient
+      await new Promise((r) => setTimeout(r, 25000));
+    }
+  }
+}
+const missing = script.lines.map((l, i) => (files[i] ? null : { text: l.text, voice: kokoroVoices[l.speaker], out: `tmp/line${i}.wav`, i })).filter(Boolean);
+if (missing.length) {
+  try {
+    writeFileSync("tmp/kokoro.json", JSON.stringify(missing));
+    execFileSync("python3", ["../scripts/tts_kokoro.py", "tmp/kokoro.json"], { stdio: "inherit" });
+    missing.forEach((m) => { if (existsSync(m.out)) files[m.i] = m.out; });
+  } catch (e) {
+    console.error(`Kokoro failed: ${e.message}. Lines without a voice will be silent.`);
+  }
+}
+
+const clips = script.lines.map((line, i) => {
+  const file = files[i];
+  const dur = file ? probe(file) : Math.max(1.6, line.text.split(/\s+/).length / 2.6);
+  return { ...line, file, dur, mouth: file ? mouthFrom(file) : [] };
+});
 
 let t = LEAD;
 const lines = clips.map((c) => {
   const start = Math.round(t * 100) / 100;
   t += c.dur + GAP;
-  return { speaker: c.speaker, text: c.text, card: c.card || null, start, end: Math.round((start + c.dur) * 100) / 100, file: c.file };
+  return { speaker: c.speaker, text: c.text, card: c.card || null, react: c.react || null, talk: c.talk || null, scene: c.scene || null, start, end: Math.round((start + c.dur) * 100) / 100, mouth: c.mouth.map(([a, b]) => [Math.round((start + a) * 100) / 100, Math.round((start + b) * 100) / 100]), file: c.file };
 });
 const total = Math.ceil((t - GAP + TAIL) * 10) / 10;
 
@@ -77,7 +167,7 @@ if (music) {
   copyFileSync("tmp/voice_only.mp3", "assets/voice.mp3");
 }
 
-writeFileSync("timing.js", `window.TIMING = ${JSON.stringify({ total, title: script.title, lines: lines.map(({ file, ...l }) => l) }, null, 1)};\n`);
+writeFileSync("timing.js", `window.TIMING = ${JSON.stringify({ total, title: script.title, end: script.end || null, lines: lines.map(({ file, ...l }) => l) }, null, 1)};\n`);
 const html = readFileSync("index.html", "utf8").replace(/data-duration="[\d.]+"/g, `data-duration="${total}"`);
 writeFileSync("index.html", html);
 console.log(`Dialogue ready: ${lines.length} lines, ${total} s, ${spoken.length} spoken.`);

@@ -1,0 +1,139 @@
+name: Podcast episode (lip-synced)
+
+# One full episode, no manual steps: dialogue from dolidob.com's open data, Gemini voices, LatentSync lip sync
+# on a free Kaggle GPU and the 8 animated scenes in podcast/scenes. Started by n8n ("dolidob - Podcast Episodes"),
+# which downloads the artifact, asks for approval on Telegram and uploads to YouTube as private.
+# Secrets: GEMINI_API_KEY, KAGGLE_API_TOKEN.
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_label:
+        description: "Label so the caller can find this run"
+        required: true
+        type: string
+      state_a:
+        description: "First state, e.g. Texas"
+        required: true
+        type: string
+      state_b:
+        description: "Second state, e.g. California"
+        required: true
+        type: string
+      salary:
+        description: "Salary in the open data, e.g. 75000"
+        required: true
+        type: string
+
+run-name: "episode ${{ inputs.run_label }}"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: podcast-episode
+  cancel-in-progress: false
+
+env:
+  KAGGLE_USER: dobliabdellah
+  KERNEL: dolidob-episode
+  TELEGRAM_CHAT_ID: "8570418080"
+
+jobs:
+  episode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak-ng
+          pip install "kokoro>=0.9.4" soundfile pillow numpy "kaggle>=1.8"
+
+      - name: Test the script generator against the first episode
+        run: sh tests/test_make_episode.sh
+
+      - name: Write the episode script
+        run: python scripts/make_episode.py "${{ inputs.state_a }}" "${{ inputs.state_b }}" "${{ inputs.salary }}"
+
+      - name: Voices (Gemini, Kokoro fallback) and timing
+        working-directory: podcast
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TTS_PROVIDER: gemini
+        run: |
+          node ../scripts/make_dialogue.mjs
+          mkdir -p ../lipsync/episode
+          cp tmp/line*.wav timing.js ../lipsync/episode/
+
+      - name: Speaker crops for lip sync
+        working-directory: podcast
+        env:
+          LIPSYNC_RUN: ../lipsync/episode
+        run: python ../scripts/lipsync_scenes.py prep
+
+      - name: Publish the jobs where the Kaggle notebook can download them
+        id: jobs
+        run: |
+          BR="episode-jobs-${{ github.run_id }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b "$BR"
+          git add -f lipsync/episode/jobs
+          git commit -q -m "Lip-sync jobs for run ${{ github.run_id }}"
+          git push -q origin "$BR"
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"
+
+      - name: Lip sync on Kaggle (free T4 GPUs)
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+        run: |
+          mkdir -p kernel
+          sed "s#RAW_URL#https://raw.githubusercontent.com/${{ github.repository }}/${{ steps.jobs.outputs.branch }}/lipsync/episode/jobs#" scripts/kaggle_lipsync.py > kernel/lipsync.py
+          cat > kernel/kernel-metadata.json <<EOF
+          {"id": "$KAGGLE_USER/$KERNEL", "title": "$KERNEL", "code_file": "lipsync.py", "language": "python",
+           "kernel_type": "script", "is_private": true, "enable_gpu": true, "enable_internet": true,
+           "dataset_sources": [], "competition_sources": [], "kernel_sources": []}
+          EOF
+          kaggle kernels push -p kernel
+          sleep 60
+          for i in $(seq 1 120); do
+            s=$(kaggle kernels status "$KAGGLE_USER/$KERNEL" 2>&1 || true)
+            echo "$(date +%T) $s"
+            echo "$s" | grep -qi complete && break
+            echo "$s" | grep -qiE "error|cancel" && exit 1
+            sleep 60
+          done
+          mkdir -p lipsync/episode/synced
+          kaggle kernels output "$KAGGLE_USER/$KERNEL" -p lipsync/episode/synced
+          ls -la lipsync/episode/synced
+
+      - name: Remove the jobs branch
+        if: always() && steps.jobs.outputs.branch != ''
+        run: git push -q origin --delete "${{ steps.jobs.outputs.branch }}" || true
+
+      - name: Paste the synced faces and compose the video
+        working-directory: podcast
+        env:
+          LIPSYNC_RUN: ../lipsync/episode
+        run: |
+          rm -rf scenes_synced
+          python ../scripts/lipsync_scenes.py paste
+          python ../scripts/compose_scenes.py
+          ffprobe -v error -show_entries stream=codec_type,width,height:format=duration -of default=nw=1 out/video.mp4
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: episode
+          path: podcast/out/video.mp4
+          retention-days: 7

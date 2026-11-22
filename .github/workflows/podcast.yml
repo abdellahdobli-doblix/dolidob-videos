@@ -7,8 +7,16 @@ on:
         description: "Label so the caller can find this run"
         required: true
         type: string
+      mode:
+        description: "scenes = scene clips; cast = character template; audio = only build the voices and commit them to lipsync/run"
+        required: false
+        default: scenes
+        type: string
 
 run-name: "podcast ${{ inputs.run_label }}"
+
+permissions:
+  contents: write
 
 jobs:
   render:
@@ -26,32 +34,71 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-liberation
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Kokoro text-to-speech (free, Apache-2.0)
+        run: |
+          sudo apt-get install -y espeak-ng
+          pip install "kokoro>=0.9.4" soundfile pillow numpy
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: kokoro-model-v1
+
       - name: Build dialogue audio and timing
         working-directory: podcast
         env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TTS_PROVIDER: gemini
         run: node ../scripts/make_dialogue.mjs
 
+      - name: Save the voices for lip sync (audio mode)
+        if: inputs.mode == 'audio'
+        working-directory: podcast
+        run: |
+          mkdir -p ../lipsync/run
+          cp tmp/line*.wav timing.js assets/voice.mp3 ../lipsync/run/
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lipsync/run
+          git commit -m "Voices for lip sync (${{ inputs.run_label }})"
+          git push
+
+      - name: Compose scene clips, subtitles and cards
+        if: inputs.mode == 'scenes'
+        working-directory: podcast
+        run: python ../scripts/compose_scenes.py
+
       - name: Prepare browser
+        if: inputs.mode == 'cast'
         run: npx --yes hyperframes browser ensure
 
       - name: Lint and check
+        if: inputs.mode == 'cast'
         working-directory: podcast
         run: |
           npx --yes hyperframes lint
           npx --yes hyperframes check || echo "check reported warnings"
 
       - name: Render 1080x1920
+        if: inputs.mode == 'cast'
         working-directory: podcast
         run: |
           mkdir -p out
           npx --yes hyperframes render --quality high --fps 30 --output out/video.mp4
 
       - name: Probe result
+        if: inputs.mode != 'audio'
         working-directory: podcast
         run: ffprobe -v error -show_entries stream=codec_type,width,height,duration -of default=nw=1 out/video.mp4
 
       - uses: actions/upload-artifact@v4
+        if: inputs.mode != 'audio'
         with:
           name: video
           path: podcast/out/video.mp4
