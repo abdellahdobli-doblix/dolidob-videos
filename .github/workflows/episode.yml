@@ -58,7 +58,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg espeak-ng
-          pip install "kokoro>=0.9.4" soundfile pillow numpy "kaggle>=1.8"
+          pip install "kokoro>=0.9.4" soundfile pillow numpy six "kaggle>=1.8"
+          kaggle --version
 
       - name: Test the script generator against the first episode
         run: sh tests/test_make_episode.sh
@@ -110,8 +111,8 @@ jobs:
           for i in $(seq 1 120); do
             s=$(kaggle kernels status "$KAGGLE_USER/$KERNEL" 2>&1 || true)
             echo "$(date +%T) $s"
-            echo "$s" | grep -qi complete && break
-            echo "$s" | grep -qiE "error|cancel" && exit 1
+            echo "$s" | grep -qi 'status "\?[A-Za-z.]*COMPLETE' && break
+            echo "$s" | grep -qiE 'status "?[A-Za-z.]*(ERROR|CANCEL)' && exit 1
             sleep 60
           done
           mkdir -p lipsync/episode/synced
