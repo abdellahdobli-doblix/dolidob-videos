@@ -58,8 +58,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg espeak-ng
-          pip install "kokoro>=0.9.4" soundfile pillow numpy six "kaggle>=1.8"
-          kaggle --version
+          pip install "kokoro>=0.9.4" soundfile pillow numpy six
 
       - name: Test the script generator against the first episode
         run: sh tests/test_make_episode.sh
@@ -98,25 +97,39 @@ jobs:
       - name: Lip sync on Kaggle (free T4 GPUs)
         env:
           KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+        # Kaggle's REST API directly: a notebook pushed this way starts at once on the free T4 GPUs
+        # (one pushed with the kaggle CLI's default metadata stayed queued for over an hour).
         run: |
-          mkdir -p kernel
-          sed "s#RAW_URL#https://raw.githubusercontent.com/${{ github.repository }}/${{ steps.jobs.outputs.branch }}/lipsync/episode/jobs#" scripts/kaggle_lipsync.py > kernel/lipsync.py
-          cat > kernel/kernel-metadata.json <<EOF
-          {"id": "$KAGGLE_USER/$KERNEL", "title": "$KERNEL", "code_file": "lipsync.py", "language": "python",
-           "kernel_type": "script", "is_private": true, "enable_gpu": true, "enable_internet": true,
-           "dataset_sources": [], "competition_sources": [], "kernel_sources": []}
-          EOF
-          kaggle kernels push -p kernel
+          API=https://www.kaggle.com/api/v1
+          AUTH="Authorization: Bearer $KAGGLE_API_TOKEN"
+          RAW="https://raw.githubusercontent.com/${{ github.repository }}/${{ steps.jobs.outputs.branch }}/lipsync/episode/jobs"
+          python - "$RAW" > push.json <<'PY'
+          import json, sys
+          text = open("scripts/kaggle_lipsync.py").read().replace("RAW_URL", sys.argv[1])
+          print(json.dumps({"slug": "dobliabdellah/dolidob-episode", "newTitle": "dolidob-episode", "text": text,
+                            "language": "python", "kernelType": "script", "isPrivate": True, "enableGpu": True,
+                            "enableInternet": True, "datasetDataSources": [], "competitionDataSources": [],
+                            "kernelDataSources": [], "categoryIds": []}))
+          PY
+          curl -sf -H "$AUTH" -H "Content-Type: application/json" -d @push.json "$API/kernels/push" | tee pushed.json
+          grep -q '"hasError":false' pushed.json
           sleep 60
           for i in $(seq 1 120); do
-            s=$(kaggle kernels status "$KAGGLE_USER/$KERNEL" 2>&1 || true)
+            s=$(curl -s -H "$AUTH" "$API/kernels/status?userName=$KAGGLE_USER&kernelSlug=$KERNEL")
             echo "$(date +%T) $s"
-            echo "$s" | grep -qi 'status "\?[A-Za-z.]*COMPLETE' && break
-            echo "$s" | grep -qiE 'status "?[A-Za-z.]*(ERROR|CANCEL)' && exit 1
+            echo "$s" | grep -q '"status":"complete"' && break
+            echo "$s" | grep -qE '"status":"(error|cancel)' && exit 1
             sleep 60
           done
           mkdir -p lipsync/episode/synced
-          kaggle kernels output "$KAGGLE_USER/$KERNEL" -p lipsync/episode/synced
+          curl -sf -H "$AUTH" "$API/kernels/output?userName=$KAGGLE_USER&kernelSlug=$KERNEL" > output.json
+          python - <<'PY'
+          import json, urllib.request
+          for f in json.load(open("output.json")).get("files", []):
+              if f["fileName"].endswith(".mp4"):
+                  urllib.request.urlretrieve(f["url"], "lipsync/episode/synced/" + f["fileName"])
+                  print("downloaded", f["fileName"])
+          PY
           ls -la lipsync/episode/synced
 
       - name: Remove the jobs branch
