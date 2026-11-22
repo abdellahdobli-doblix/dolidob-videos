@@ -1,9 +1,9 @@
-name: Podcast episode (lip-synced)
+name: Podcast episode
 
-# One full episode, no manual steps: dialogue from dolidob.com's open data, Gemini voices, LatentSync lip sync
-# on a free Kaggle GPU and the 8 animated scenes in podcast/scenes. Started by n8n ("dolidob - Podcast Episodes"),
-# which downloads the artifact, asks for approval on Telegram and uploads to YouTube as private.
-# Secrets: GEMINI_API_KEY, KAGGLE_API_TOKEN.
+# One full episode, no manual steps: dialogue from dolidob.com's open data, Gemini voices and the 8 animated
+# scenes in podcast/scenes (Grok clips, no lip sync). Started by n8n ("dolidob - Podcast Episodes"), which
+# downloads the artifact, asks for approval on Telegram and uploads to YouTube as private.
+# Secret: GEMINI_API_KEY.
 
 on:
   workflow_dispatch:
@@ -28,21 +28,16 @@ on:
 run-name: "episode ${{ inputs.run_label }}"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: podcast-episode
   cancel-in-progress: false
 
-env:
-  KAGGLE_USER: dobliabdellah
-  KERNEL: dolidob-episode
-  TELEGRAM_CHAT_ID: "8570418080"
-
 jobs:
   episode:
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -73,76 +68,11 @@ jobs:
           TTS_PROVIDER: gemini
         run: |
           node ../scripts/make_dialogue.mjs
-          mkdir -p ../lipsync/episode
-          cp tmp/line*.wav timing.js ../lipsync/episode/
 
-      - name: Speaker crops for lip sync
+      - name: Compose the scenes, voices, cards and subtitles
         working-directory: podcast
-        env:
-          LIPSYNC_RUN: ../lipsync/episode
-        run: python ../scripts/lipsync_scenes.py prep
-
-      - name: Publish the jobs where the Kaggle notebook can download them
-        id: jobs
         run: |
-          BR="episode-jobs-${{ github.run_id }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -q -b "$BR"
-          git add -f lipsync/episode/jobs
-          git commit -q -m "Lip-sync jobs for run ${{ github.run_id }}"
-          git push -q origin "$BR"
-          echo "branch=$BR" >> "$GITHUB_OUTPUT"
-
-      - name: Lip sync on Kaggle (free T4 GPUs)
-        env:
-          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
-        # Kaggle's REST API directly: a notebook pushed this way starts at once on the free T4 GPUs
-        # (one pushed with the kaggle CLI's default metadata stayed queued for over an hour).
-        run: |
-          API=https://www.kaggle.com/api/v1
-          AUTH="Authorization: Bearer $KAGGLE_API_TOKEN"
-          RAW="https://raw.githubusercontent.com/${{ github.repository }}/${{ steps.jobs.outputs.branch }}/lipsync/episode/jobs"
-          python - "$RAW" > push.json <<'PY'
-          import json, sys
-          text = open("scripts/kaggle_lipsync.py").read().replace("RAW_URL", sys.argv[1])
-          print(json.dumps({"slug": "dobliabdellah/dolidob-episode", "newTitle": "dolidob-episode", "text": text,
-                            "language": "python", "kernelType": "script", "isPrivate": True, "enableGpu": True,
-                            "enableInternet": True, "datasetDataSources": [], "competitionDataSources": [],
-                            "kernelDataSources": [], "categoryIds": []}))
-          PY
-          curl -sf -H "$AUTH" -H "Content-Type: application/json" -d @push.json "$API/kernels/push" | tee pushed.json
-          grep -q '"hasError":false' pushed.json
-          sleep 60
-          for i in $(seq 1 120); do
-            s=$(curl -s -H "$AUTH" "$API/kernels/status?userName=$KAGGLE_USER&kernelSlug=$KERNEL")
-            echo "$(date +%T) $s"
-            echo "$s" | grep -q '"status":"complete"' && break
-            echo "$s" | grep -qE '"status":"(error|cancel)' && exit 1
-            sleep 60
-          done
-          mkdir -p lipsync/episode/synced
-          curl -sf -H "$AUTH" "$API/kernels/output?userName=$KAGGLE_USER&kernelSlug=$KERNEL" > output.json
-          python - <<'PY'
-          import json, urllib.request
-          for f in json.load(open("output.json")).get("files", []):
-              if f["fileName"].endswith(".mp4"):
-                  urllib.request.urlretrieve(f["url"], "lipsync/episode/synced/" + f["fileName"])
-                  print("downloaded", f["fileName"])
-          PY
-          ls -la lipsync/episode/synced
-
-      - name: Remove the jobs branch
-        if: always() && steps.jobs.outputs.branch != ''
-        run: git push -q origin --delete "${{ steps.jobs.outputs.branch }}" || true
-
-      - name: Paste the synced faces and compose the video
-        working-directory: podcast
-        env:
-          LIPSYNC_RUN: ../lipsync/episode
-        run: |
-          rm -rf scenes_synced
-          python ../scripts/lipsync_scenes.py paste
+          rm -rf scenes_synced  # the Grok scene clips as they are, no lip sync
           python ../scripts/compose_scenes.py
           ffprobe -v error -show_entries stream=codec_type,width,height:format=duration -of default=nw=1 out/video.mp4
 
