@@ -12,6 +12,16 @@ on:
         required: false
         default: scenes
         type: string
+      script:
+        description: "Script to voice, relative to podcast/ (long episode: long/paycheck-guide.json)"
+        required: false
+        default: script.json
+        type: string
+      layout:
+        description: "short = 1080x1920; landscape = 1920x1080 with the 16:9 clips in podcast/scenes-long"
+        required: false
+        default: short
+        type: string
 
 run-name: "podcast ${{ inputs.run_label }}"
 
@@ -21,7 +31,7 @@ permissions:
 jobs:
   render:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -48,6 +58,11 @@ jobs:
           path: ~/.cache/huggingface
           key: kokoro-model-v1
 
+      - name: Use the chosen script
+        if: inputs.script != 'script.json'
+        working-directory: podcast
+        run: cp "${{ inputs.script }}" script.json
+
       - name: Build dialogue audio and timing
         working-directory: podcast
         env:
@@ -72,6 +87,9 @@ jobs:
       - name: Compose scene clips, subtitles and cards
         if: inputs.mode == 'scenes'
         working-directory: podcast
+        env:
+          LAYOUT: ${{ inputs.layout == 'landscape' && 'landscape' || '' }}
+          SCENES_DIR: ${{ inputs.layout == 'landscape' && 'scenes-long' || 'scenes' }}
         run: python ../scripts/compose_scenes.py
 
       - name: Prepare browser
