@@ -15,8 +15,12 @@ import sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-W, H, FPS = 1080, 1920, 30
-SCENE_Y = 520  # top of the picture area
+# LAYOUT=landscape makes a 1920x1080 video for long episodes: the scene fills the frame, the title sits in a
+# band at the top, number cards at the top right and subtitles at the bottom. Default: the 1080x1920 Short.
+LAND = os.environ.get("LAYOUT") == "landscape"
+W, H, FPS = (1920, 1080, 30) if LAND else (1080, 1920, 30)
+SCENE_Y = 0 if LAND else 520  # top of the picture area
+SCENES_DIR = os.environ.get("SCENES_DIR", "scenes")  # the long episode keeps its 16:9 clips in scenes-long
 NIGHT = (11, 20, 48)
 COLORS = {"sky": "#93c5fd", "violet": "#c4b5fd", "pink": "#f9a8d4", "gold": "#fcd34d", "mint": "#6ee7b7"}
 SPEAKER = {"dob": ("Dob", "#93c5fd"), "doli": ("Doli", "#fcd34d")}
@@ -73,19 +77,30 @@ for y in range(H):  # soft vertical glow
     k = max(0, 1 - abs(y - 960) / 1100)
     d.line([(0, y), (W, y)], fill=(int(11 + 14 * k), int(20 + 28 * k), int(48 + 60 * k), 255))
 kick = font("Plex", 30, "Bold")
-d.text((W / 2, 70), "THE DOLIDOB PAYCHECK PODCAST", font=kick, fill="#93c5fd", anchor="mm")
 title = (T.get("title") or "").replace(" (2026)", "")
-tf = font("Bricolage", 66, "ExtraBold")
-for i, line in enumerate(wrap(d, title, tf, 960)):
-    d.text((W / 2, 150 + i * 72), line, font=tf, fill="white", anchor="mm")
+if not LAND:
+    d.text((W / 2, 70), "THE DOLIDOB PAYCHECK PODCAST", font=kick, fill="#93c5fd", anchor="mm")
+    tf = font("Bricolage", 66, "ExtraBold")
+    for i, line in enumerate(wrap(d, title, tf, 960)):
+        d.text((W / 2, 150 + i * 72), line, font=tf, fill="white", anchor="mm")
 bg.save("tmp/overlays/bg.png")
 
 top = Image.new("RGBA", (W, H), (0, 0, 0, 0))
 d = ImageDraw.Draw(top)
-pill = rounded((400, 84), 42, "#fcd34d")
-top.alpha_composite(pill, (340, 1700))
-d.text((W / 2, 1742), "dolidob.com", font=font("Bricolage", 46, "ExtraBold"), fill=NIGHT, anchor="mm")
-d.text((W / 2, 1830), "Estimates only, not tax advice. 2026 rules.", font=font("Plex", 26, "Medium"), fill="#8fa4d8", anchor="mm")
+if LAND:
+    # Soft dark band at the top for the show name and title, over the full-frame scene.
+    for y in range(150):
+        d.line([(0, y), (W, y)], fill=NIGHT + (int(200 * (1 - y / 150)),))
+    d.text((60, 44), "THE DOLIDOB PAYCHECK PODCAST", font=font("Plex", 24, "Bold"), fill="#93c5fd", anchor="lm")
+    d.text((60, 92), title, font=font("Bricolage", 46, "ExtraBold"), fill="white", anchor="lm")
+    top.alpha_composite(rounded((300, 64), 32, "#fcd34d"), (W - 360, 44))
+    d.text((W - 210, 76), "dolidob.com", font=font("Bricolage", 36, "ExtraBold"), fill=NIGHT, anchor="mm")
+    d.text((W - 60, H - 24), "Estimates only, not tax advice. 2026 rules.", font=font("Plex", 20, "Medium"), fill="#c9d6f5", anchor="rm")
+else:
+    pill = rounded((400, 84), 42, "#fcd34d")
+    top.alpha_composite(pill, (340, 1700))
+    d.text((W / 2, 1742), "dolidob.com", font=font("Bricolage", 46, "ExtraBold"), fill=NIGHT, anchor="mm")
+    d.text((W / 2, 1830), "Estimates only, not tax advice. 2026 rules.", font=font("Plex", 26, "Medium"), fill="#8fa4d8", anchor="mm")
 top.save("tmp/overlays/top.png")
 
 # Subtitles: one per line, from its start until the next line starts.
@@ -96,17 +111,18 @@ for i, l in enumerate(lines):
     size = 40 if len(l["text"]) > 95 else 46
     f = font("Plex", size, "SemiBold")
     probe_d = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
-    rows = wrap(probe_d, l["text"], f, 860)
+    bw = 1400 if LAND else 940  # subtitle box width
+    rows = wrap(probe_d, l["text"], f, bw - 80)
     h = 80 + len(rows) * int(size * 1.25) + 30
-    im = rounded((940, h), 28, (11, 20, 48, 225), outline=(255, 255, 255, 50))
+    im = rounded((bw, h), 28, (11, 20, 48, 225), outline=(255, 255, 255, 50))
     dd = ImageDraw.Draw(im)
     name, col = SPEAKER[l["speaker"]]
-    dd.text((470, 44), name.upper(), font=font("Bricolage", 32, "ExtraBold"), fill=col, anchor="mm")
+    dd.text((bw // 2, 44), name.upper(), font=font("Bricolage", 32, "ExtraBold"), fill=col, anchor="mm")
     for j, r in enumerate(rows):
-        dd.text((470, 92 + j * int(size * 1.25) + size // 2), r, font=f, fill="white", anchor="mm")
+        dd.text((bw // 2, 92 + j * int(size * 1.25) + size // 2), r, font=f, fill="white", anchor="mm")
     p = f"tmp/overlays/sub{i}.png"
     im.save(p)
-    overlays.append((p, 70, 1660 - h, l["start"], until))
+    overlays.append((p, (W - bw) // 2, (H - 50 - h) if LAND else (1660 - h), l["start"], until))
 
 # Number cards: from their line until the next card.
 carded = [l for l in lines if l.get("card")]
@@ -120,7 +136,7 @@ for i, l in enumerate(carded):
     dd.text((410, 130), c["value"], font=font("Bricolage", vs, "ExtraBold"), fill=COLORS.get(c["color"], "white"), anchor="mm")
     p = f"tmp/overlays/card{i}.png"
     im.save(p)
-    overlays.append((p, 130, 300, l["start"], until))
+    overlays.append((p, (W - 880) if LAND else 130, 170 if LAND else 300, l["start"], until))
 
 # Scenes: start with their first line (the first scene starts at 0), end where the next scene starts.
 scenes = []
@@ -140,7 +156,7 @@ for n, s, e in spans:
         w, h = map(int, probe(path, "stream=width,height").split(","))
         y0, y1 = 0, h
     else:
-        path = f"scenes/scene{n}.mp4"
+        path = f"{SCENES_DIR}/scene{n}.mp4"
         w, h, y0, y1 = picture_rows(path)
         clip = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]).decode())
         dur = e - s
@@ -155,8 +171,9 @@ for n, s, e in spans:
             args += ["-stream_loop", "-1"]
             print(f"Scene {n}: {dur:.1f} s of lines for a {clip:.1f} s clip, looped forward and back")
     args += ["-i", path]
+    fit = f"scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}" if LAND else f"scale={W}:-2:flags=lanczos"
     filters.append(
-        f"[{idx}:v]crop={w}:{y1 - y0}:0:{y0},setpts={k:.4f}*(PTS-STARTPTS),fps={FPS},scale={W}:-2:flags=lanczos,"
+        f"[{idx}:v]crop={w}:{y1 - y0}:0:{y0},setpts={k:.4f}*(PTS-STARTPTS),fps={FPS},{fit},"
         f"tpad=stop_mode=clone:stop_duration={dur + 1:.2f},trim=0:{dur:.3f},setpts=PTS-STARTPTS+{s:.3f}/TB[s{idx}]"
     )
     filters.append(f"{last}[s{idx}]overlay=0:{SCENE_Y}:eof_action=pass:enable='between(t,{s:.3f},{e:.3f})'[b{idx}]")

@@ -1,0 +1,556 @@
+{
+ "title": "Where Does My Paycheck Go? The Full 2026 Guide",
+ "voices": {
+  "doli": "cgSgspJ2msm6clMCkdW9",
+  "dob": "bIHbv24MWmeRgasZH58o"
+ },
+ "kokoroVoices": {
+  "doli": "af_heart",
+  "dob": "am_michael"
+ },
+ "geminiVoices": {
+  "doli": "Aoede",
+  "dob": "Puck"
+ },
+ "geminiStyle": {
+  "dob": "Say in a casual, curious young man's voice, natural podcast pace",
+  "doli": "Say in a warm, confident young woman's voice, clear and friendly, natural podcast pace"
+ },
+ "source": "Figures from dolidob.com open data and IRS/SSA publications (2026 rules; 2027 where stated).",
+ "end": {
+  "dob": "celebrate",
+  "doli": "point"
+ },
+ "lines": [
+  {
+   "speaker": "dob",
+   "text": "Doli, I just got my first real job offer. Seventy-five thousand dollars a year!",
+   "scene": 1,
+   "card": {
+    "label": "Salary",
+    "value": "$75,000",
+    "color": "sky"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "Congratulations! Now the question nobody asks: how much of that actually lands in your bank account?",
+   "scene": 2
+  },
+  {
+   "speaker": "dob",
+   "text": "Seventy-five thousand divided by twenty-six paychecks. About twenty-eight hundred each time, right?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "That's your gross pay, before anything comes out. Today let's follow one paycheck from top to bottom and see where every dollar goes.",
+   "scene": 3,
+   "card": {
+    "label": "Gross every two weeks",
+    "value": "$2,884.62",
+    "color": "sky"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Okay. Walk me through it. Slowly.",
+   "scene": 2
+  },
+  {
+   "speaker": "doli",
+   "text": "First stop: federal income tax. And here's the part most people get wrong. You are not taxed on all seventy-five thousand.",
+   "scene": 3
+  },
+  {
+   "speaker": "dob",
+   "text": "I'm not?",
+   "scene": 5
+  },
+  {
+   "speaker": "doli",
+   "text": "No. In twenty twenty-six, a single filer gets a standard deduction of sixteen thousand one hundred dollars. That part is never taxed.",
+   "scene": 3,
+   "card": {
+    "label": "2026 standard deduction",
+    "value": "$16,100",
+    "color": "mint"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "So your taxable income is fifty-eight thousand nine hundred.",
+   "scene": 4,
+   "card": {
+    "label": "Taxable income",
+    "value": "$58,900",
+    "color": "sky"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "And then they take twenty-two percent of that? That's my bracket, isn't it?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "Twenty-two percent is your top bracket, but only the last few dollars are taxed at that rate. The tax system works in layers.",
+   "scene": 3
+  },
+  {
+   "speaker": "doli",
+   "text": "The first twelve thousand four hundred is taxed at ten percent. The next part, up to fifty thousand four hundred, at twelve percent. Only the rest is taxed at twenty-two.",
+   "scene": 4,
+   "card": {
+    "label": "2026 brackets",
+    "value": "10% · 12% · 22%",
+    "color": "violet"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "So what's the total?",
+   "scene": 2
+  },
+  {
+   "speaker": "doli",
+   "text": "Seven thousand six hundred seventy dollars for the year. That's about ten percent of your salary, not twenty-two.",
+   "scene": 3,
+   "card": {
+    "label": "Federal income tax",
+    "value": "$7,670",
+    "color": "pink"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Wait, so getting a raise can't make me take home less money?",
+   "scene": 7
+  },
+  {
+   "speaker": "doli",
+   "text": "Never. Only the dollars above the line pay the higher rate. A raise always leaves you with more.",
+   "scene": 3
+  },
+  {
+   "speaker": "dob",
+   "text": "Okay, what's next on the list?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "FICA. That's Social Security and Medicare, and they work very differently from income tax.",
+   "scene": 3
+  },
+  {
+   "speaker": "doli",
+   "text": "Social Security is a flat six point two percent of your pay. Medicare is one point four five percent. No deductions, no brackets.",
+   "scene": 4,
+   "card": {
+    "label": "Social Security + Medicare",
+    "value": "7.65%",
+    "color": "violet"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "So on seventy-five thousand that's...",
+   "scene": 2
+  },
+  {
+   "speaker": "doli",
+   "text": "Four thousand six hundred fifty for Social Security, and one thousand eighty-seven fifty for Medicare.",
+   "scene": 4,
+   "card": {
+    "label": "FICA on $75,000",
+    "value": "$5,737.50",
+    "color": "pink"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Does it ever stop?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "Social Security does. In twenty twenty-six it stops once your wages pass one hundred eighty-four thousand five hundred. Medicare never stops, and above two hundred thousand an extra zero point nine percent is withheld.",
+   "scene": 3,
+   "card": {
+    "label": "2026 wage base",
+    "value": "$184,500",
+    "color": "mint"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Federal, Social Security, Medicare. Is that everything?",
+   "scene": 2
+  },
+  {
+   "speaker": "doli",
+   "text": "Not yet. Now comes the part that depends on where you live: state income tax.",
+   "scene": 6
+  },
+  {
+   "speaker": "dob",
+   "text": "Right, my offer has two locations. Texas or California.",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "Texas takes no income tax from wages. So on seventy-five thousand, you keep about sixty-one thousand five hundred ninety-three dollars a year.",
+   "scene": 6,
+   "card": {
+    "label": "Take-home in Texas",
+    "value": "$61,593",
+    "color": "gold"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "California takes state income tax, plus one point three percent for state disability insurance. You'd keep about fifty-seven thousand five hundred sixty-five.",
+   "scene": 6,
+   "card": {
+    "label": "Take-home in California",
+    "value": "$57,565",
+    "color": "gold"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "That's about four thousand dollars a year apart. For the exact same salary!",
+   "scene": 5,
+   "card": {
+    "label": "Difference per year",
+    "value": "$4,028",
+    "color": "pink"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "And Texas is not alone. Nine states take no income tax from wages: Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington and Wyoming.",
+   "scene": 4,
+   "card": {
+    "label": "States with no wage tax",
+    "value": "9",
+    "color": "mint"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "So I should just move to one of those?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "Careful. Washington still takes paid family leave and a long-term care program, about a thousand forty dollars on seventy-five thousand. And sales tax, property tax and rent are not in your paycheck at all.",
+   "scene": 3
+  },
+  {
+   "speaker": "dob",
+   "text": "Got it. The paycheck is only one piece of the cost of living.",
+   "scene": 2
+  },
+  {
+   "speaker": "dob",
+   "text": "One more thing. I'm getting married next year. Does that change my paycheck?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "It can. Married couples who file jointly get a bigger standard deduction, thirty-two thousand two hundred in twenty twenty-six, and wider brackets.",
+   "scene": 3,
+   "card": {
+    "label": "2026 joint standard deduction",
+    "value": "$32,200",
+    "color": "mint"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "If you're the only earner on seventy-five thousand, federal income tax drops from seven thousand six hundred seventy to four thousand six hundred forty.",
+   "scene": 4,
+   "card": {
+    "label": "Joint federal tax on $75,000",
+    "value": "$4,640",
+    "color": "pink"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "In Texas that means your take-home goes up to about sixty-four thousand six hundred twenty-three a year.",
+   "scene": 6,
+   "card": {
+    "label": "Married take-home in Texas",
+    "value": "$64,623",
+    "color": "gold"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "That's three thousand more a year just for getting married?",
+   "scene": 5
+  },
+  {
+   "speaker": "doli",
+   "text": "When one spouse earns and the other doesn't, yes. When you both work, the extra income fills the brackets faster, so the gap is smaller.",
+   "scene": 3
+  },
+  {
+   "speaker": "dob",
+   "text": "How does my employer even know I'm married?",
+   "scene": 2
+  },
+  {
+   "speaker": "doli",
+   "text": "From your Form W-4. It's the form you fill out when you start a job. It tells payroll your filing status, any second job, your dependents and extra deductions.",
+   "scene": 3
+  },
+  {
+   "speaker": "doli",
+   "text": "If your W-4 is wrong, too much or too little comes out of every paycheck. You only find out when you file your return.",
+   "scene": 4
+  },
+  {
+   "speaker": "dob",
+   "text": "So the W-4 is like the settings menu for my paycheck.",
+   "scene": 7
+  },
+  {
+   "speaker": "doli",
+   "text": "That's a great way to put it. Update it when your life changes: marriage, a baby, a second job.",
+   "scene": 3
+  },
+  {
+   "speaker": "dob",
+   "text": "Got it. Life changes, update the settings.",
+   "scene": 1
+  },
+  {
+   "speaker": "dob",
+   "text": "My friend Sam gets paid by the hour. Twenty-five dollars. How does that compare?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "Full time is forty hours a week for fifty-two weeks. That's two thousand eighty hours, so twenty-five dollars an hour is fifty-two thousand a year.",
+   "scene": 3,
+   "card": {
+    "label": "$25 an hour, full time",
+    "value": "$52,000",
+    "color": "sky"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "In a state with no income tax, Sam keeps about forty-three thousand nine hundred sixty-two. That's around three thousand six hundred sixty-four a month.",
+   "scene": 6,
+   "card": {
+    "label": "Sam's take-home",
+    "value": "$43,962",
+    "color": "gold"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "And when Sam works overtime?",
+   "scene": 2
+  },
+  {
+   "speaker": "doli",
+   "text": "Under federal law, hours over forty in a week are paid at one and a half times the rate. For Sam, that's thirty-seven fifty an hour.",
+   "scene": 4,
+   "card": {
+    "label": "Time and a half",
+    "value": "$37.50",
+    "color": "sky"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "But his overtime paychecks always look heavily taxed.",
+   "scene": 7
+  },
+  {
+   "speaker": "doli",
+   "text": "That's a withholding trick, not a special tax. Payroll treats a big paycheck as if you earned that much every single week, so it withholds more. Part of it comes back at tax time.",
+   "scene": 3
+  },
+  {
+   "speaker": "dob",
+   "text": "Okay, what about bonuses? My offer mentions a five-thousand-dollar signing bonus.",
+   "scene": 1,
+   "card": {
+    "label": "Signing bonus",
+    "value": "$5,000",
+    "color": "sky"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "Employers can withhold a flat twenty-two percent for federal tax on a bonus. That's one thousand one hundred dollars.",
+   "scene": 3
+  },
+  {
+   "speaker": "doli",
+   "text": "Then Social Security and Medicare take another three hundred eighty-two fifty. So you'd see about three thousand five hundred seventeen.",
+   "scene": 4,
+   "card": {
+    "label": "Bonus you keep",
+    "value": "$3,517.50",
+    "color": "gold"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Ouch. Is the bonus taxed more than my salary?",
+   "scene": 5
+  },
+  {
+   "speaker": "doli",
+   "text": "No. Twenty-two percent is only the amount held back up front. Your bonus is taxed like any other income when you file, so you may get some back. Only bonuses above one million dollars in a year are withheld at thirty-seven percent.",
+   "scene": 3
+  },
+  {
+   "speaker": "dob",
+   "text": "I'll worry about the million later.",
+   "scene": 7
+  },
+  {
+   "speaker": "doli",
+   "text": "Now the part that can actually lower your taxes: your 401(k).",
+   "scene": 6
+  },
+  {
+   "speaker": "dob",
+   "text": "The retirement thing? I was going to skip it for now.",
+   "scene": 2
+  },
+  {
+   "speaker": "doli",
+   "text": "Here's why you shouldn't. Traditional 401(k) money comes out before federal income tax. Put in six percent, and many employers add a match.",
+   "scene": 3
+  },
+  {
+   "speaker": "doli",
+   "text": "On a sixty-thousand-dollar salary, six percent is three thousand six hundred. A common match of fifty cents per dollar adds another eighteen hundred, free.",
+   "scene": 4,
+   "card": {
+    "label": "You + employer match",
+    "value": "$5,400",
+    "color": "gold"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Free money. Okay, I'm listening. Is there a limit?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "In twenty twenty-six you can put in up to twenty-four thousand five hundred. At fifty or older, eight thousand more. And from sixty to sixty-three, a higher catch-up of eleven thousand two hundred fifty.",
+   "scene": 3,
+   "card": {
+    "label": "2026 401(k) limit",
+    "value": "$24,500",
+    "color": "mint"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Roth or traditional? Everyone argues about that.",
+   "scene": 2
+  },
+  {
+   "speaker": "doli",
+   "text": "Simple rule. If you expect a lower tax rate in retirement, traditional usually wins. If you expect a higher one, Roth wins. Same rate, it's a tie.",
+   "scene": 4
+  },
+  {
+   "speaker": "dob",
+   "text": "And next year? Does all this change?",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "The numbers move with inflation. In twenty twenty-seven the standard deduction rises to sixteen thousand six hundred, and the brackets get wider.",
+   "scene": 3,
+   "card": {
+    "label": "2027 standard deduction",
+    "value": "$16,600",
+    "color": "mint"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "On the same seventy-five thousand, federal income tax drops to about seven thousand three hundred eighty-nine. The 401(k) limit rises to twenty-five thousand five hundred.",
+   "scene": 4,
+   "card": {
+    "label": "2027 federal tax on $75,000",
+    "value": "$7,389.50",
+    "color": "pink"
+   }
+  },
+  {
+   "speaker": "doli",
+   "text": "And Social Security will apply to wages up to one hundred ninety-two thousand three hundred.",
+   "scene": 6,
+   "card": {
+    "label": "2027 wage base",
+    "value": "$192,300",
+    "color": "mint"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Let me see if I've got it. Gross pay, minus the standard deduction, then tax in layers.",
+   "scene": 2
+  },
+  {
+   "speaker": "dob",
+   "text": "Plus seven point six five percent for Social Security and Medicare. Plus the state, which can be zero or several thousand.",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "Exactly. And then your choices: overtime, bonuses, your 401(k), your filing status. Each one changes the number.",
+   "scene": 3
+  },
+  {
+   "speaker": "dob",
+   "text": "So the real question isn't what's my salary. It's what will I actually take home.",
+   "scene": 7
+  },
+  {
+   "speaker": "doli",
+   "text": "That's the one. And you don't have to do the math by hand.",
+   "scene": 6
+  },
+  {
+   "speaker": "doli",
+   "text": "At dolidob dot com there's a free paycheck calculator for every state, plus guides for everything we covered today, all built on official 2026 figures.",
+   "scene": 6,
+   "card": {
+    "label": "Free calculators",
+    "value": "dolidob.com",
+    "color": "gold"
+   }
+  },
+  {
+   "speaker": "dob",
+   "text": "Okay, I'm checking both of my offers tonight.",
+   "scene": 1
+  },
+  {
+   "speaker": "doli",
+   "text": "Good plan. These are estimates, not tax advice, so check your real pay stub too. Thanks for listening!",
+   "scene": 8
+  },
+  {
+   "speaker": "dob",
+   "text": "See you next time!",
+   "scene": 8
+  }
+ ]
+}
