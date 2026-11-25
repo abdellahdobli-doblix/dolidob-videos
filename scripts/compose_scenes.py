@@ -3,7 +3,7 @@
 Run inside podcast/ after make_dialogue.mjs:  python ../scripts/compose_scenes.py
 Reads timing.js (line timings, cards, scene number per line) and assets/voice.mp3, and writes out/video.mp4:
   - each scene clip (scenes/sceneN.mp4) plays while its lines are spoken; it is gently slowed or sped up
-    (0.6x to 1.35x) to fit, and holds its last frame if the lines are still longer
+    (0.6x to 1.35x) to fit, and if the lines are still longer it loops forward and back (never a frozen frame)
   - the colour bands the image tools leave above and below the picture are cropped away
   - title, number cards, subtitles and the dolidob.com pill are drawn on top
 """
@@ -145,6 +145,15 @@ for n, s, e in spans:
         clip = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]).decode())
         dur = e - s
         k = min(1.35, max(0.6, dur / clip))
+        if dur > clip * k + 0.05:
+            # The lines run longer than the slowed clip: play it forward then backward (a seamless
+            # "boomerang") and loop that, instead of freezing on the last frame while the voice goes on.
+            loop = f"tmp/loop{n}.mp4"
+            subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", path, "-filter_complex", "[0:v]split[a][b];[b]reverse[r];[a][r]concat=n=2:v=1:a=0[v]",
+                            "-map", "[v]", "-an", "-c:v", "libx264", "-crf", "16", "-pix_fmt", "yuv420p", loop], check=True)
+            path, k = loop, 1.15
+            args += ["-stream_loop", "-1"]
+            print(f"Scene {n}: {dur:.1f} s of lines for a {clip:.1f} s clip, looped forward and back")
     args += ["-i", path]
     filters.append(
         f"[{idx}:v]crop={w}:{y1 - y0}:0:{y0},setpts={k:.4f}*(PTS-STARTPTS),fps={FPS},scale={W}:-2:flags=lanczos,"
