@@ -126,6 +126,29 @@ if (missing.length) {
   }
 }
 
+// TTS clips (Gemini most of all) often start and end with up to a second of silence. Trim it, so the
+// only pause between lines is GAP; otherwise the Short has long silent stretches between sentences.
+function trimSilence(file, i) {
+  const out = `tmp/line${i}_trim.wav`;
+  const edge = "silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.05";
+  try {
+    execFileSync("ffmpeg", ["-y", "-v", "error", "-i", file, "-af", `${edge},areverse,${edge},areverse`, out]);
+    const before = probe(file);
+    const after = probe(out);
+    if (after > 0.3) {
+      if (before - after > 0.15) console.log(`Line ${i}: trimmed ${(before - after).toFixed(2)} s of silence`);
+      return out;
+    }
+  } catch (e) {
+    console.error(`Could not trim line ${i}: ${e.message}`);
+  }
+  return file;
+}
+script.lines.forEach((_, i) => {
+  if (files[i]) files[i] = trimSilence(files[i], i);
+  else console.error(`WARNING: line ${i} has no voice and will be silent in the video.`);
+});
+
 const clips = script.lines.map((line, i) => {
   const file = files[i];
   const dur = file ? probe(file) : Math.max(1.6, line.text.split(/\s+/).length / 2.6);
